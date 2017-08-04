@@ -1,0 +1,15 @@
+TEXT search Indexing
+-----------------
+db.providers.createIndex( { specialisation: "text", company: "text", first_name: "text", last_name: "text", state: "text", address: "text", city: "text"});
+db.users.update({},{$set : {is_active:true, is_deleted: false}},{upsert:false,multi:true})
+db.users.update({},{$set : {provider_timezone: "Asia/Kolkata"}},{upsert:false,multi:true})
+"gps_location" : [ 
+        -95.8833, 
+        35.9420
+    ]
+----------------------------------------------------
+db.users.update({},{$set : {user_timezone: ''}},{upsert:false,multi:true})
+Hclelc&%*637
+
+db.getCollection('schedules').find({"provider_id" : ObjectId("5965e2b826621a47e92836d3")})
+
