@@ -43,10 +43,7 @@ var authenticate = (req, res, next) => {
 }
 
 var nonAuthenticate = (req, res, next) => {
-    platformValidation(req, res, (err, platform) => {
-        req.platform = platform;
         next();
-    });
 }
 
 var platformValidation = (req, res, callback) => {

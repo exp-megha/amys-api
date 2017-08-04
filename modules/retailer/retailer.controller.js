@@ -1,5 +1,5 @@
 const _ = require('lodash');
-var { Provider } = require('./../../models/provider');
+var { Retailer } = require('./../../models/retailer');
 var { User } = require('./../../models/user');
 const geodist = require('geodist');
 var { Serviceprovider } = require('./../../models/serviceprovider');
@@ -268,7 +268,7 @@ let updateProviderInfo = (req, res) => {
  */
 var getProviderList = (query, skip, limit, reqQuery, res, sort_by_field) => {
     console.log("sort_by_field: ", sort_by_field);
-    
+
     Provider.count(query, function (err, count) {
         reqQuery.total_count = count;
         let select_fields = {
@@ -307,15 +307,14 @@ var getProviderList = (query, skip, limit, reqQuery, res, sort_by_field) => {
 }
 
 /**
- * function to invoke the provider list functionality
- * @author Rakhi M R
+ * function to get th eretailer list
  * @updatedBy Megha S
  * @return json
  * @createdOn 19-May-2017
  */
 
-let providersList = (req, res) => {
-    let limit = req.query.limit || (req.query.platform == 'webportal') ? constants.WEB_PAGE_LIMIT : constants.PAGE_LIMIT;
+let getRetailer = (req, res) => {
+    let limit = req.query.limit || constants.PAGE_LIMIT;
     let page = (req.query.page) ? parseInt(req.query.page) : 0;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
     var sort_by_field = req.query.sort_by_field || "last_name";
@@ -323,32 +322,24 @@ let providersList = (req, res) => {
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
-    if (req.query.platform == 'webportal') {
-        // let query = { 'service_provider_id': req.params.id, "is_deleted": false };
-        Promise.all([]).then(() => {
-            return searchAndFilters.providerSearchQuery(req, req.query);
+    let retailer_query = {};
+    Promise.all([]).then(() => {
+        return searchAndFilters.retailerSearchQuery(req, req.query);
+    })
+        .then((query) => {
+            retailer_query = query;
+            console.log('query: ', query);
+            return Retailer.count(query);
         })
-            .then((query) => {
-                console.log('query: ', query);
-                getProviderList(query, skip, limit, req.query, res, sort_by_field);
-            }).catch((e) => {
-                res.status(200).message(e).returnFailure(null);
-            });
-    } else {
-        User.findOne({ _id: req.user._id }, { my_providers: 1 })
-            .then((result) => {
-                if (!result) {
-                    Promise.reject('get-provider-list-failed');
-                }
-                let my_provider_ids = result.my_providers.map(function (x) { return new ObjectId(x); });
-                return searchAndFilters.providerSearchQuery(req, req.query, my_provider_ids);
-            })
-            .then((query) => {
-                getProviderList(query, skip, limit, req.query, res, sort_by_field);
-            }).catch((e) => {
-                res.status(200).message(e).returnFailure(null);
-            });
-    }
+        .then((count) => {
+            req.query.total_count = count;
+            return Retailer.find(retailer_query).sort(sort_by_field).select(select_fields).lean().limit(limit).skip(skip);
+        })
+        .then((retailers) => {
+            return res.status(200).message('get-provider-list-success').returnListSuccess(retailers, reqQuery);
+        }).catch((e) => {
+            res.status(200).message(e).returnFailure(null);
+        });
 };
 
 /**
@@ -397,6 +388,7 @@ var providerIdList = (req, res) => {
 }
 
 module.exports = {
-    getProviderDetails, nearByProvidersList, getTimeSlots, addProviderDetails, providersList, updateProviderInfo,
+    addRetailer, updateRetailer, getRetailer,
+    addProviderDetails, providersList, updateProviderInfo,
     deleteprovider, providerIdList, processResult, getProviderList
 };

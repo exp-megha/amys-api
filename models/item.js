@@ -9,7 +9,8 @@ var ItemSchema = mongoose.Schema({
         item_type: {type: String, default: null},
         item_amount: {type: Number, default: null},
         unit_price_to_retailer: {type: Number, default: null },
-        percentage_deduction: {type: Number, default: null }
+        percentage_deduction: {type: Number, default: null },
+        hsn_sac_code: {type: Number, default: null }
     },
     {
         timestamps: true,
