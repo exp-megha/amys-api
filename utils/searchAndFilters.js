@@ -36,26 +36,26 @@ var retailerSearchQuery = (req, reqQuery) => {
     return filter_query;
 }
 
-let generateUserQuery = (request) => {
+let itemSearchQuery = (request) => {
     let search_query = {};
-    if (request.user_name) {
-        search_query = {
-            $or: [{ "last_name": new RegExp('^.*' + request.user_name + '.*$', "i") },
-            { "first_name": new RegExp('^.*' + request.user_name + '.*$', "i") }]
-        };
+    if (request.item_name) {
+        search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i")
     }
-    if (request.status == "false") {
-        search_query["is_active"] = false;
-    } else if (request.status == "true") {
-        search_query["is_active"] = true;
+    if (request.item_of) {
+        search_query["item_of"] = request.item_of;
     }
-    if (request.email) {
-        search_query["email"] = new RegExp('^.*' + request.email + '.*$', "i")
+    if (request.item_type) {
+        search_query["item_type"] = request.item_type;
     }
-    search_query["is_deleted"] = false;
+    if (request.item_amount) {
+        search_query["item_amount"] = request.item_amount;
+    }
+    if (request.hsn_sac_code) {
+        search_query["hsn_sac_code"] = request.hsn_sac_code;
+    }
     return search_query;
 }
 
 module.exports = {
-    retailerSearchQuery, generateUserQuery
+    retailerSearchQuery, itemSearchQuery
 }

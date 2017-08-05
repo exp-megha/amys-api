@@ -20,7 +20,7 @@ var addItem = (req, res) => {
     req.body.item_of = changeCase.titleCase(req.body.item_of);
     req.body.item_name = req.body.item_name.toUpperCase();
     req.body.item_type = changeCase.titleCase(req.body.item_type);
-    Item.findOne({ item_of: req.body.item_of, item_type: req.body.item_type, item_name: req.body.item_name })
+    Item.findOne({ item_of: req.body.item_of, item_type: req.body.item_type, item_amount: req.body.item_amount })
         .then((result) => {
             if (result) {
                 return Promise.reject('Item-exists');
@@ -80,7 +80,7 @@ let getItem = (req, res) => {
     }
     let item_query = {};
     Promise.all([]).then(() => {
-        return searchAndFilters.retailerSearchQuery(req, req.query);
+        return searchAndFilters.itemSearchQuery(req, req.query);
     })
         .then((query) => {
             item_query = query;
@@ -88,6 +88,7 @@ let getItem = (req, res) => {
         })
         .then((count) => {
             req.query.total_count = count;
+            console.log("====", item_query);
             return Item.find(item_query).sort(sort_by_field).limit(limit).skip(skip);
         })
         .then((items) => {

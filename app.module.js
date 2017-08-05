@@ -1,7 +1,8 @@
 require("./app.config");
 
 const dependencies = [
-    'retailer'
+    'retailer',
+    'item'
 ];
 
 module.exports = { dependencies };

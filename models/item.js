@@ -22,7 +22,7 @@ ItemSchema.methods.toJSON = function () {
     var reason = this;
     var reasonObject = reason.toObject();
     return _.pick(reasonObject, 
-        ['item_of', 'item_type', 'item_name', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code']);
+        ['_id', 'item_of', 'item_type', 'item_name', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code']);
 }
 
 var Item = mongoose.model("Item", ItemSchema);

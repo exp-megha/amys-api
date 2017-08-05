@@ -1,51 +1,45 @@
  /**
- * @api {get} /items?name=:name&gst_registration_number=:gst_registration_number&pan_number=:pan_number&phone_number=:phone_number Get Retailers
+ * @api {get} /items Get Items
  * @apiName Item : getItem
  * @apiGroup Item
  *
- * @apiParam {string} name name of retailer[search query string].
- * @apiParam {string} gst_registration_number gst number of retailer[search query string].
- * @apiParam {string} pan_number pan number of retailer[search query string].
- * @apiParam {Number} phone_number phone_number of retailer[search query string]
+ * @apiParam {string} item_of values would be "Idea", "SunDirect [search query string].
+ * @apiParam {string} item_name search query string.
+ * @apiParam {string} item_type search query string.
+ * @apiParam {Number} item_amount search query string.
+ * @apiParam {string} hsn_sac_code search query string.
 
  * @apiSuccessExample Example Response Format
 {
     "status": 1,
-    "message": "Item-list-success",
+    "message": "item-list-success",
     "code": 200,
     "totalRecords": 2,
     "limitPerPage": 100000,
     "page": 1,
     "searchparams": {
-        "name": "agenc",
         "total_count": 2
     },
     "data": [
         {
-            "_id": "598566b850633c19f4920a8f",
-            "name": "Amys Agencies Updated",
-            "is_active": true,
-            "address": "Varkkala Vadasserikonam",
-            "city": "Trivandrum",
-            "state_code": 21,
-            "state": "Kerala",
-            "zip": 695143,
-            "phone_number": 9846202554,
-            "pan_number": "BNUPS6438L",
-            "gst_registration_number": "GST0BNUPS6438LIN1Z"
+            "_id": "5985eb29acc2a51eac48750b",
+            "item_of": "Idea",
+            "item_type": "Coupon",
+            "item_name": "RSC 50",
+            "item_amount": 50,
+            "unit_price_to_retailer": 48,
+            "percentage_deduction": 3.5,
+            "hsn_sac_code": "2343dsgfsdg"
         },
         {
-            "_id": "598564e182fb2712703a07a5",
-            "name": "Yanuma Agencies",
-            "is_active": true,
-            "address": "Varkkala Vadasserikonam",
-            "city": "Trivandrum",
-            "state_code": 21,
-            "state": "Kerala",
-            "zip": 695143,
-            "phone_number": 9846202554,
-            "pan_number": "BNUPS6438L",
-            "gst_registration_number": "GST0BNUPS6438LIN1Z"
+            "_id": "5985ec326689701e14a04419",
+            "item_of": "Idea",
+            "item_type": "Flexy",
+            "item_name": "2000",
+            "item_amount": 2000,
+            "unit_price_to_retailer": 1900,
+            "percentage_deduction": 2,
+            "hsn_sac_code": "23435"
         }
     ]
 }
@@ -73,28 +67,22 @@
   * @apiName Item : addItem
   * @apiGroup Item
   *
-   * @apiParam {string} name name of retailer.
-   * @apiParam {string} email email of retailer.
-   * @apiParam {string} address address of retailer.
-   * @apiParam {string} city city of retailer.
-   * @apiParam {string} state state of retailer.
-   * @apiParam {string} state_code state_code of retailer.
-   * @apiParam {string} zip zip of retailer.
-   * @apiParam {string} gst_registration_number gst number of retailer.
-   * @apiParam {string} pan_number pan number of retailer.
-   * @apiParam {Number} phone_number phone_number of retailer
+   * @apiParam {string} item_of values would be Idea, Sun Direct.
+   * @apiParam {string} item_type values would be Coupon, Flexy etc.
+   * @apiParam {string} item_name name of the item.
+   * @apiParam {Number} item_amount amount of item.
+   * @apiParam {Number} unit_price_to_retailer selling price to retailer.
+   * @apiParam {Number} percentage_deduction percentage of amount deductin to retailer.
+   * @apiParam {string} hsn_sac_code hsn code of the item
   * @apiSuccessExample Example Request Format
   {
-  "name": "Yanuma Communications Varkkala",
-  "email": "yamunacommunications@gmail.com",
-  "address": "Varkkala, Vadasserikonam",
-  "city": "Trivandrum",
-  "state": "Kerala",
-  "state_code": 21,
-  "zip": 695143,
-  "phone_number": 9846202554,
-  "pan_number": "BNUPS6438L",
-  "gst_registration_number": "GST0BNUPS6438LIN1Z"
+  "item_of": "Idea",
+  "item_type": "Coupon",
+  "item_name": "RSC 100",
+  "item_amount": 100,
+  "unit_price_to_retailer": 99,
+  "percentage_deduction": 3.5,
+  "hsn_sac_code": "2343dsgfsdg"
 }
 *
  * @apiSuccess {number} status 1 for success.
@@ -108,17 +96,14 @@
     "message": "Item-added-successfully",
     "code": 200,
     "data": {
-        "_id": "59856a70123c7d1234363fb8",
-        "name": "Yanuma Communications Varkkala",
-        "is_active": true,
-        "address": "Varkkala Vadasserikonam",
-        "city": "Trivandrum",
-        "state_code": 21,
-        "state": "Kerala",
-        "zip": 695143,
-        "phone_number": 9846202554,
-        "pan_number": "BNUPS6438L",
-        "gst_registration_number": "GST0BNUPS6438LIN1Z"
+        "_id": "5985f16e1bd5da1e98f538e9",
+        "item_of": "Idea",
+        "item_type": "Coupon",
+        "item_name": "RSC 100",
+        "item_amount": 100,
+        "unit_price_to_retailer": 99,
+        "percentage_deduction": 3.5,
+        "hsn_sac_code": "2343dsgfsdg"
     }
 }
  *
@@ -136,29 +121,23 @@
   * @apiName Item : updateItem
   * @apiGroup Item
   *
-  * @apiParam {string} id _id of the retailer
-  * @apiParam {string} name name of retailer.
-   * @apiParam {string} email email of retailer.
-   * @apiParam {string} address address of retailer.
-   * @apiParam {string} city city of retailer.
-   * @apiParam {string} state state of retailer.
-   * @apiParam {string} state_code state_code of retailer.
-   * @apiParam {string} zip zip of retailer.
-   * @apiParam {string} gst_registration_number gst number of retailer.
-   * @apiParam {string} pan_number pan number of retailer.
-   * @apiParam {Number} phone_number phone_number of retailer
+  * @apiParam {string} id _id of the item
+   * @apiParam {string} item_of values would be Idea, Sun Direct.
+   * @apiParam {string} item_type values would be Coupon, Flexy etc.
+   * @apiParam {string} item_name name of the item.
+   * @apiParam {Number} item_amount amount of item.
+   * @apiParam {Number} unit_price_to_retailer selling price to retailer.
+   * @apiParam {Number} percentage_deduction percentage of amount deductin to retailer.
+   * @apiParam {string} hsn_sac_code hsn code of the item
   * @apiSuccessExample Example Request Format
  {
-  "name": "Yanuma Communications Varkkala",
-  "email": "yamunacommunications@gmail.com",
-  "address": "Varkkala, Vadasserikonam",
-  "city": "Trivandrum",
-  "state": "Kerala",
-  "state_code": 21,
-  "zip": 695143,
-  "phone_number": 9846202554,
-  "pan_number": "BNUPS6438L",
-  "gst_registration_number": "GST0BNUPS6438LIN1Z"
+  "item_of": "Idea",
+  "item_type": "Coupon",
+  "item_name": "RSC 100",
+  "item_amount": 100,
+  "unit_price_to_retailer": 99,
+  "percentage_deduction": 3.5,
+  "hsn_sac_code": "2343dsgfsdg"
 }
   *
   *
@@ -174,16 +153,13 @@
     "code": 200,
     "data": {
         "_id": "598566b850633c19f4920a8f",
-        "name": "Amys Agencies Updated",
-        "is_active": true,
-        "address": "Varkkala Vadasserikonam",
-        "city": "Trivandrum",
-        "state_code": 21,
-        "state": "Kerala",
-        "zip": 695143,
-        "phone_number": 9846202554,
-        "pan_number": "BNUPS6438L",
-        "gst_registration_number": "GST0BNUPS6438LIN1Z"
+        "item_of": "Idea",
+        "item_type": "Coupon",
+        "item_name": "RSC 100",
+        "item_amount": 100,
+        "unit_price_to_retailer": 99,
+        "percentage_deduction": 3.5,
+        "hsn_sac_code": "2343dsgfsdg"
     }
 }
  *
@@ -191,7 +167,7 @@
  *
  {
    "status": 0,
-   "message": "'User validation failed",
+   "message": "'item validation failed",
    "code": 400,
    "data": null
  }
