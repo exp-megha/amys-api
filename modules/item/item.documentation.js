@@ -1,7 +1,7 @@
  /**
- * @api {get} /retailers?name=:name&gst_registration_number=:gst_registration_number&pan_number=:pan_number&phone_number=:phone_number Get Retailers
- * @apiName Retailer : getRetailer
- * @apiGroup Retailer
+ * @api {get} /items?name=:name&gst_registration_number=:gst_registration_number&pan_number=:pan_number&phone_number=:phone_number Get Retailers
+ * @apiName Item : getItem
+ * @apiGroup Item
  *
  * @apiParam {string} name name of retailer[search query string].
  * @apiParam {string} gst_registration_number gst number of retailer[search query string].
@@ -11,7 +11,7 @@
  * @apiSuccessExample Example Response Format
 {
     "status": 1,
-    "message": "retailer-list-success",
+    "message": "Item-list-success",
     "code": 200,
     "totalRecords": 2,
     "limitPerPage": 100000,
@@ -54,7 +54,7 @@
 *
 {
     "status": 1,
-    "message": "retailer-list-success",
+    "message": "Item-list-success",
     "code": 200,
     "totalRecords": 0,
     "limitPerPage": 100000,
@@ -69,9 +69,9 @@
 */
 
   /**
-  * @api {post} /retailers  Add Retailer
-  * @apiName Retailer : addRetailer
-  * @apiGroup Retailer
+  * @api {post} /items  Add Item
+  * @apiName Item : addItem
+  * @apiGroup Item
   *
    * @apiParam {string} name name of retailer.
    * @apiParam {string} email email of retailer.
@@ -105,7 +105,7 @@
  *
  {
     "status": 1,
-    "message": "retailer-added-successfully",
+    "message": "Item-added-successfully",
     "code": 200,
     "data": {
         "_id": "59856a70123c7d1234363fb8",
@@ -126,15 +126,15 @@
  *
 {
     "status": 0,
-    "message": "retailer-exists",
+    "message": "Item-exists",
     "code": 400,
     "data": null
 }
 */
   /**
-  * @api {put} /retailers/:id  Update Retailer
-  * @apiName Retailer : updateRetailer
-  * @apiGroup Retailer
+  * @api {put} /items/:id  Update Item
+  * @apiName Item : updateItem
+  * @apiGroup Item
   *
   * @apiParam {string} id _id of the retailer
   * @apiParam {string} name name of retailer.
@@ -170,7 +170,7 @@
   *
   {
     "status": 1,
-    "message": "retailer-information-updated",
+    "message": "Item-information-updated",
     "code": 200,
     "data": {
         "_id": "598566b850633c19f4920a8f",
