@@ -1,15 +1,16 @@
 const express = require('express');
-const controller = require('./provider.controller');
+const controller = require('./retailer.controller');
 const router = express.Router();
 
 const routes = (authenticate) => {
-
 	router.route("/")
-		.post(authenticate.nonAuthenticate, controller.addRetailer)
-		.put(authenticate.nonAuthenticate, controller.updateRetailer)
-		.get(authenticate.nonAuthenticate, controller.getRetailer);
-		
-    return router;
+		.get(authenticate.nonAuthenticate, controller.getRetailer)
+		.post(authenticate.nonAuthenticate, controller.addRetailer);
+
+	router.route("/:id")
+		.put(authenticate.nonAuthenticate, controller.updateRetailer);
+
+	return router;
 }
 
 module.exports = { routes, path: 'retailers' };

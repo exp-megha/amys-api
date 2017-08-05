@@ -2,7 +2,7 @@ var moment = require('moment');
 var constants = require('../constants');
 var ObjectId = require('mongodb').ObjectId;
 
-var retailerSearchQuery = (req, reqQuery, my_provider_ids) => {
+var retailerSearchQuery = (req, reqQuery) => {
     var filter_query = {};
     if (reqQuery.search_text) {
         var re = new RegExp(reqQuery.search_text, 'i');

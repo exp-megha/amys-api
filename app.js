@@ -6,7 +6,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const validator = require('validator');
 const helmet = require('helmet');
-const multer  = require('multer');
+// const multer  = require('multer');
 
 const {dependencies} = require('./app.module');
 const {mongoose} = require('./db/mongoose');
@@ -29,7 +29,7 @@ var i18n = require('./middleware/i18n');
 // =======================
 // Configuration
 // =======================
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 4000;
 var app = express();
 app.set('i18n', new i18n());
 app.use(helmet());

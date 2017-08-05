@@ -1,12 +1,7 @@
 require("./app.config");
 
 const dependencies = [
-    'appointment',
-    'users',
-    'device',
-    'serviceproviders',
-    'provider',
-    'common'
+    'retailer'
 ];
 
 module.exports = { dependencies };

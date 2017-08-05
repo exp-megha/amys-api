@@ -24,6 +24,7 @@ var response = (req, res, next) => {
 
     /*Success Response*/
     res.returnSuccess = (data) => {
+            console.log('returnSuccessdata: ', data);
         message =  res.responseMessage|| status[res.statusCode];
         res.send({
           status: 1,
@@ -35,6 +36,7 @@ var response = (req, res, next) => {
 
     /*List success Response*/
     res.returnListSuccess = (data, query_string) => {
+            console.log('data: ', data);
 
         message =  res.responseMessage|| status[res.statusCode];
         if (query_string.page) {
@@ -43,11 +45,6 @@ var response = (req, res, next) => {
           var page = 1;
         }
         var limit = constants.PAGE_LIMIT;
-        if (query_string.platform) {
-            if (query_string.platform == 'webportal') {
-                limit = constants.WEB_PAGE_LIMIT;
-            }
-        }
         res.send({status: 1, message, code: res.statusCode, totalRecords: query_string.total_count, limitPerPage: limit, page: page, searchparams: query_string, data: data});
     };
 
