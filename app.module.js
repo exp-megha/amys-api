@@ -3,7 +3,7 @@ require("./app.config");
 const dependencies = [
     'retailer',
     'item',
-    'invoice'
+    // 'invoice'
 ];
 
 module.exports = { dependencies };
