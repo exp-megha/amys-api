@@ -81,6 +81,7 @@
    * @apiParam {string} state_code state_code of retailer.
    * @apiParam {string} zip zip of retailer.
    * @apiParam {string} gst_registration_number gst number of retailer.
+   * @apiParam {string} place_of_supply Place of supply of retailer[default value would be 'Kerala'].
    * @apiParam {string} pan_number pan number of retailer.
    * @apiParam {Number} phone_number phone_number of retailer
   * @apiSuccessExample Example Request Format
@@ -94,7 +95,8 @@
   "zip": 695143,
   "phone_number": 9846202554,
   "pan_number": "BNUPS6438L",
-  "gst_registration_number": "GST0BNUPS6438LIN1Z"
+  "gst_registration_number": "GST0BNUPS6438LIN1Z",
+  "place_of_supply": "KERALA"
 }
 *
  * @apiSuccess {number} status 1 for success.
@@ -118,7 +120,8 @@
         "zip": 695143,
         "phone_number": 9846202554,
         "pan_number": "BNUPS6438L",
-        "gst_registration_number": "GST0BNUPS6438LIN1Z"
+        "gst_registration_number": "GST0BNUPS6438LIN1Z",
+        "place_of_supply": "KERALA"
     }
 }
  *
@@ -144,6 +147,7 @@
    * @apiParam {string} state state of retailer.
    * @apiParam {string} state_code state_code of retailer.
    * @apiParam {string} zip zip of retailer.
+   * @apiParam {string} place_of_supply Place of supply of retailer[default value would be 'Kerala'].
    * @apiParam {string} gst_registration_number gst number of retailer.
    * @apiParam {string} pan_number pan number of retailer.
    * @apiParam {Number} phone_number phone_number of retailer
@@ -158,7 +162,8 @@
   "zip": 695143,
   "phone_number": 9846202554,
   "pan_number": "BNUPS6438L",
-  "gst_registration_number": "GST0BNUPS6438LIN1Z"
+  "gst_registration_number": "GST0BNUPS6438LIN1Z",
+  "place_of_supply": "KERALA"  
 }
   *
   *
@@ -183,7 +188,8 @@
         "zip": 695143,
         "phone_number": 9846202554,
         "pan_number": "BNUPS6438L",
-        "gst_registration_number": "GST0BNUPS6438LIN1Z"
+        "gst_registration_number": "GST0BNUPS6438LIN1Z",
+        "place_of_supply": "KERALA"        
     }
 }
  *
