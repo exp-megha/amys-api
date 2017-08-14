@@ -8,7 +8,11 @@ const routes = (authenticate) => {
 		.post(authenticate.nonAuthenticate, controller.addRetailer);
 
 	router.route("/:id")
-		.put(authenticate.nonAuthenticate, controller.updateRetailer);
+		.put(authenticate.nonAuthenticate, controller.updateRetailer)
+		.get(authenticate.nonAuthenticate, controller.getRetailerDetails);
+
+	router.route("/:id/activateInactivate")
+		.put(authenticate.nonAuthenticate, controller.activateInactivate)
 
 	return router;
 }

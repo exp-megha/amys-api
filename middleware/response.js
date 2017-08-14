@@ -24,7 +24,7 @@ var response = (req, res, next) => {
 
     /*Success Response*/
     res.returnSuccess = (data) => {
-            console.log('returnSuccessdata: ', data);
+            // console.log('returnSuccessdata: ', data);
         message =  res.responseMessage|| status[res.statusCode];
         res.send({
           status: 1,
@@ -36,7 +36,7 @@ var response = (req, res, next) => {
 
     /*List success Response*/
     res.returnListSuccess = (data, query_string) => {
-            console.log('data: ', data);
+            // console.log('data: ', data);
 
         message =  res.responseMessage|| status[res.statusCode];
         if (query_string.page) {

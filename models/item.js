@@ -11,6 +11,7 @@ var ItemSchema = mongoose.Schema({
     item_amount: { type: Number, default: null },
     unit_price_to_retailer: { type: Number, default: null },
     percentage_deduction: { type: Number, default: null },
+    is_active: { type: Boolean, default: true },
     hsn_sac_code: { type: String, default: null }
 },
     {
@@ -21,8 +22,8 @@ var ItemSchema = mongoose.Schema({
 ItemSchema.methods.toJSON = function () {
     var reason = this;
     var reasonObject = reason.toObject();
-    return _.pick(reasonObject, 
-        ['_id', 'item_of', 'item_type', 'item_name', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code']);
+    return _.pick(reasonObject,
+        ['_id', 'item_of', 'item_type', 'item_name', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code', 'is_active']);
 }
 
 var Item = mongoose.model("Item", ItemSchema);

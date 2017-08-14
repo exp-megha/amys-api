@@ -80,15 +80,15 @@ let getItem = (req, res) => {
     }
     let item_query = {};
     Promise.all([]).then(() => {
-        return searchAndFilters.itemSearchQuery(req, req.query);
+        return searchAndFilters.itemSearchQuery(req.query);
     })
         .then((query) => {
+            // console.log("query: ", query);
             item_query = query;
             return Item.count(query);
         })
         .then((count) => {
             req.query.total_count = count;
-            console.log("====", item_query);
             return Item.find(item_query).sort(sort_by_field).limit(limit).skip(skip);
         })
         .then((items) => {
@@ -101,6 +101,39 @@ let getItem = (req, res) => {
         });
 };
 
+let getItemDetails = (req, res) => {
+    if (!req.params.id) {
+        res.status(400).message('item_id-required').returnFailure(null);
+    }
+    Item.findOne({ '_id': req.params.id })
+        .then((item) => {
+            if (!item) {
+                return Promise.reject('Item-not-found');
+            }
+            return res.status(200).message('Item-information-retrieved-successfully').returnSuccess(item);
+        }).catch((err) => {
+            res.status(400).message(err).returnFailure(null);
+        });
+}
+
+var activateInactivate = (req, res) => {
+    Item.findOne({ _id: req.params.id }, (err, result) => {
+        if (!result) {
+            return res.status(400).message('user-not-found').returnFailure(null);
+        }
+        Item.findByIdAndUpdate(req.params.id, { $set: { 'is_active': req.body.is_active } }, { new: true }, (err, updated_item) => {
+            if (updated_item) {
+                if (req.body.is_active == true) {
+                    return res.status(200).message('activated-successfully').returnSuccess(updated_item);
+                } else {
+                    return res.status(200).message('inactivated-successfully').returnSuccess(updated_item);
+                }
+            }
+            return res.status(400).message('item-update-failed').returnFailure(null);
+        })
+    });
+}
+
 module.exports = {
-    addItem, updateItem, getItem
+    addItem, updateItem, getItem, getItemDetails, activateInactivate
 };

@@ -32,8 +32,10 @@ var retailerSearchQuery = (req, reqQuery) => {
     if (reqQuery.phone_number) {
         filter_query['phone_number'] = new RegExp('^.*' + reqQuery.phone_number + '.*$', "i");
     }
-    var is_active = (reqQuery.is_active == 'true') ? true : false;
-    filter_query['is_active'] = is_active;
+    if (reqQuery.is_active) {
+        var is_active = (reqQuery.is_active == 'true') ? true : false;
+        filter_query['is_active'] = is_active;
+    }
     return filter_query;
 }
 
@@ -54,9 +56,40 @@ let itemSearchQuery = (request) => {
     if (request.hsn_sac_code) {
         search_query["hsn_sac_code"] = request.hsn_sac_code;
     }
+    if (request.is_active) {
+        var is_active = (request.is_active == 'true') ? true : false;
+        search_query['is_active'] = is_active;
+    }
+    return search_query;
+}
+
+let invoiceSearchQuery = (request) => {
+    let search_query = {};
+    if (request.retailer_id) {
+        search_query["retailer_id"] = new RegExp('^.*' + request.retailer_id + '.*$', "i")
+    }
+    if (request.month) {
+        search_query["month"] = request.month;
+    }
+    if (request.year) {
+        search_query["year"] = request.year;
+    }
+    if (request.invoice_number) {
+        search_query["invoice_number"] = new RegExp('^.*' + request.invoice_number + '.*$', "i");
+    }
+    if (request.retailer_name) {
+        search_query["retailer_name"] = new RegExp('^.*' + request.retailer_name + '.*$', "i");
+    }
+    if (request.invoice_date) {
+        search_query["invoice_date"] = request.invoice_date;
+    }
+    if (request.is_active) {
+        var is_active = (request.is_active == 'true') ? true : false;
+        search_query['is_active'] = is_active;
+    }
     return search_query;
 }
 
 module.exports = {
-    retailerSearchQuery, itemSearchQuery
+    retailerSearchQuery, itemSearchQuery, invoiceSearchQuery
 }

@@ -12,29 +12,19 @@ var changeCase = require('change-case');
  * @return json
  * @createdOn 09-May-2017
  */
-let getProviderDetails = (req, res) => {
-    let query;
-    if (req.query.platform == 'webportal') {
-        query = { 'service_provider_id': ObjectId(req.params.id), '_id': req.params.providerId };
-    } else {
-        query = { '_id': req.params.providerId };
+let getRetailerDetails = (req, res) => {
+    if (!req.params.id) {
+        res.status(400).message('Retailer-id-required').returnFailure(null);
     }
-    Provider.findOne(query).lean().then((provider) => {
-        if (!provider) {
-            return Promise.reject('provider-not-found');
-        }
-        let result = provider;
-        if (req.query.selected_date && req.query.platform != "webportal") {
-            timeslots.getUpdatedSchedule(provider._id, "D", req.query.selected_date, (schedule_updates) => {
-                let time_slots = timeslots.getTimeslots(req.query.selected_date, provider, req.query.platform, "D", schedule_updates, 'providerDetails');
-                result.timeslots = time_slots;
-                delete result.schedule_configuration;
-                return res.status(200).message('provider_retrieved').returnSuccess(result);
-            })
-        } else {
-            return res.status(200).message('provider_retrieved').returnSuccess(result);
-        }
-    }).catch((e) => res.status(400).message(e).returnFailure(null));
+    Retailer.findOne({ '_id': req.params.id })
+        .then((retailer) => {
+            if (!retailer) {
+                return Promise.reject('Retailer-not-found');
+            }
+            return res.status(200).message('Retailer-information-retrieved-successfully').returnSuccess(retailer);
+        }).catch((err) => {
+            res.status(400).message(err).returnFailure(null);
+        });
 }
 
 /**
@@ -108,7 +98,6 @@ let getRetailer = (req, res) => {
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
-    var query = {};
     let retailer_query = {};
     Promise.all([]).then(() => {
         return searchAndFilters.retailerSearchQuery(req, req.query);
@@ -131,6 +120,24 @@ let getRetailer = (req, res) => {
         });
 };
 
+var activateInactivate = (req, res) => {
+    Retailer.findOne({ _id: req.params.id }, (err, result) => {
+        if (!result) {
+            return res.status(400).message('user-not-found').returnFailure(null);
+        }
+        Retailer.findByIdAndUpdate(req.params.id, { $set: { 'is_active': req.body.is_active } }, { new: true }, (err, updated_item) => {
+            if (updated_item) {
+                if (req.body.is_active == true) {
+                    return res.status(200).message('activated-successfully').returnSuccess(updated_item);
+                } else {
+                    return res.status(200).message('inactivated-successfully').returnSuccess(updated_item);
+                }
+            }
+            return res.status(400).message('retailer-update-failed').returnFailure(null);
+        })
+    });
+}
+
 module.exports = {
-    addRetailer, updateRetailer, getRetailer
+    addRetailer, updateRetailer, getRetailer, getRetailerDetails, activateInactivate
 };

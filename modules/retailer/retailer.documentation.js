@@ -85,6 +85,7 @@
    * @apiParam {string} place_of_supply Place of supply of retailer[default value would be 'Kerala'].
    * @apiParam {string} pan_number pan number of retailer.
    * @apiParam {Number} phone_number phone_number of retailer
+    * @apiParam {Boolean} is_active true / false [default value would be 'true'].
   * @apiSuccessExample Example Request Format
   {
   "name": "Yanuma Communications Varkkala",
@@ -97,7 +98,8 @@
   "phone_number": 9846202554,
   "pan_number": "BNUPS6438L",
   "gst_registration_number": "GST0BNUPS6438LIN1Z",
-  "place_of_supply": "KERALA"
+  "place_of_supply": "KERALA",
+  "is_active": true
 }
 *
  * @apiSuccess {number} status 1 for success.
@@ -152,6 +154,7 @@
    * @apiParam {string} gst_registration_number gst number of retailer.
    * @apiParam {string} pan_number pan number of retailer.
    * @apiParam {Number} phone_number phone_number of retailer
+    * @apiParam {Boolean} is_active true / false [default value would be 'true'].
   * @apiSuccessExample Example Request Format
  {
   "name": "Yanuma Communications Varkkala",
@@ -164,6 +167,7 @@
   "phone_number": 9846202554,
   "pan_number": "BNUPS6438L",
   "gst_registration_number": "GST0BNUPS6438LIN1Z",
+"is_active": false,
   "place_of_supply": "KERALA"  
 }
   *
@@ -177,6 +181,92 @@
   {
     "status": 1,
     "message": "retailer-information-updated",
+    "code": 200,
+    "data": {
+        "_id": "598566b850633c19f4920a8f",
+        "name": "Amys Agencies Updated",
+        "is_active": false,
+        "address": "Varkkala Vadasserikonam",
+        "city": "Trivandrum",
+        "state_code": 21,
+        "state": "Kerala",
+        "zip": 695143,
+        "phone_number": 9846202554,
+        "pan_number": "BNUPS6438L",
+        "gst_registration_number": "GST0BNUPS6438LIN1Z",
+        "place_of_supply": "KERALA"        
+    }
+}
+ *
+ * @apiErrorExample {json} Error-Response: 'validation error'
+ *
+ {
+   "status": 0,
+   "message": "'User validation failed",
+   "code": 400,
+   "data": null
+ }
+ */
+/**
+ * @api {get} /retailers/:id Get Retailers
+ * @apiName Retailer : getRetailerDetails
+ * @apiGroup Retailer
+ *
+ * @apiParam {string} id _id of the selected retailer
+
+ * @apiSuccessExample Example Response Format
+{
+    "status": 1,
+    "message": "Retailer-information-retrieved-successfully",
+    "code": 200,
+    "data": {
+        "_id": "598564e182fb2712703a07a5",
+        "name": "Yanuma Agencies",
+        "is_active": true,
+        "address": "Varkkala Vadasserikonam",
+        "city": "Trivandrum",
+        "state_code": 21,
+        "state": "Kerala",
+        "zip": 695143,
+        "phone_number": 9846202554,
+        "pan_number": "BNUPS6438L",
+        "gst_registration_number": "GST0BNUPS6438LIN1Z",
+        "place_of_supply": "KERALA"
+    }
+}
+*
+*@apiErrorExample {json} Error-Response: 'validation error'
+*
+{
+    "status": 0,
+    "message": "Bad Request",
+    "code": 400,
+    "data": null
+}
+*
+*/
+/**
+  * @api {put} /retailers/:id/activateInactivate  Activate/Inactivate Retailer
+  * @apiName Retailer : activateInactivate
+  * @apiGroup Retailer
+  *
+  * @apiParam {string} id _id of the retailer
+    * @apiParam {Boolean} is_active true / false .
+  * @apiSuccessExample Example Request Format
+ {
+"is_active": true
+}
+  *
+  *
+  * @apiSuccess {number} status 1 for success.
+  * @apiSuccess {String} message success message.
+  * @apiSuccess {number} code sucess code .
+  * @apiSuccess {string} data token returned from the API.
+  * @apiSuccessExample Example data on success
+  *
+  {
+    "status": 1,
+    "message": "activated-successfully",
     "code": 200,
     "data": {
         "_id": "598566b850633c19f4920a8f",
@@ -198,7 +288,7 @@
  *
  {
    "status": 0,
-   "message": "'User validation failed",
+   "message": "'retailer-update-failed",
    "code": 400,
    "data": null
  }

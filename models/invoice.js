@@ -6,6 +6,7 @@ const _ = require('lodash');
 
 var InvoiceSchema = mongoose.Schema({
     retailer_id: { type: mongoose.Schema.Types.ObjectId, default: null },
+    retailer_name: { type: String, default: null, trim: true },
     retailer_address: { type: String, default: null, trim: true },
     retailer_pan_number: { type: String, default: null, trim: true },
     retailer_gst_registration_number: { type: String, default: null, trim: true },
@@ -19,6 +20,7 @@ var InvoiceSchema = mongoose.Schema({
     sgst_amount: { type: Number, default: 0, trim: true },
     total_gst: { type: Number, default: 0, trim: true },
     invoice_total: { type: Number, default: 0, trim: true },
+    is_active: { type: Boolean, default: true },
     item_list: [
         {
             item_id: { type: String, default: null, trim: true },
@@ -29,7 +31,7 @@ var InvoiceSchema = mongoose.Schema({
             unit_price_to_retailer: { type: Number, default: null },
             total_unit_price_to_retailer: { type: Number, default: null },
             percentage_deduction: { type: Number, default: null },
-            hsn_sac_code: { type: Number, default: null }
+            hsn_sac_code: { type: String, default: null }
         }
     ],
 },
@@ -38,14 +40,14 @@ var InvoiceSchema = mongoose.Schema({
         versionKey: false
     });
 
-InvoiceSchema.methods.toJSON = function () {
-    var provider = this;
+// InvoiceSchema.methods.toJSON = function () {
+//     var provider = this;
 
-    var InvoiceObject = Invoice.toObject();
-    return _.pick(InvoiceObject, ['_id', 'name', 'is_active', 'address', 'city', 'state_code', 'state', 'zip',
-        'phone_number', 'pan_number', 'gst_registration_number'
-    ]);
-}
+//     var InvoiceObject = Invoice.toObject();
+//     return _.pick(InvoiceObject, ['_id', 'name', 'is_active', 'address', 'city', 'state_code', 'state', 'zip',
+//         'phone_number', 'pan_number', 'gst_registration_number'
+//     ]);
+// }
 
 var Invoice = mongoose.model("Invoice", InvoiceSchema);
 module.exports = { Invoice };
