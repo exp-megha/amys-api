@@ -67,7 +67,7 @@
   * @apiName Item : addItem
   * @apiGroup Item
   *
-   * @apiParam {string} item_of values would be Idea, Sun Direct.
+   * @apiParam {string} item_of values would be Idea, SunDirect.
    * @apiParam {string} item_type values would be Coupon, Flexy etc.
    * @apiParam {string} item_name name of the item.
    * @apiParam {Number} item_amount amount of item.
@@ -122,7 +122,7 @@
   * @apiGroup Item
   *
   * @apiParam {string} id _id of the item
-   * @apiParam {string} item_of values would be Idea, Sun Direct.
+   * @apiParam {string} item_of values would be Idea, SunDirect.
    * @apiParam {string} item_type values would be Coupon, Flexy etc.
    * @apiParam {string} item_name name of the item.
    * @apiParam {Number} item_amount amount of item.

@@ -133,7 +133,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "item_of",
-            "description": "<p>values would be Idea, Sun Direct.</p>"
+            "description": "<p>values would be Idea, SunDirect.</p>"
           },
           {
             "group": "Parameter",
@@ -525,7 +525,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "item_of",
-            "description": "<p>values would be Idea, Sun Direct.</p>"
+            "description": "<p>values would be Idea, SunDirect.</p>"
           },
           {
             "group": "Parameter",
@@ -815,6 +815,13 @@ define({ "api": [
             "optional": false,
             "field": "phone_number",
             "description": "<p>phone_number of retailer[search query string]</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_active",
+            "description": "<p>true / false [search query string]</p>"
           }
         ]
       }

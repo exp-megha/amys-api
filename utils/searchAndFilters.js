@@ -32,7 +32,8 @@ var retailerSearchQuery = (req, reqQuery) => {
     if (reqQuery.phone_number) {
         filter_query['phone_number'] = new RegExp('^.*' + reqQuery.phone_number + '.*$', "i");
     }
-    filter_query['is_active'] = true;
+    var is_active = (reqQuery.is_active == 'true') ? true : false;
+    filter_query['is_active'] = is_active;
     return filter_query;
 }
 

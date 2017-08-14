@@ -7,6 +7,7 @@
  * @apiParam {string} gst_registration_number gst number of retailer[search query string].
  * @apiParam {string} pan_number pan number of retailer[search query string].
  * @apiParam {Number} phone_number phone_number of retailer[search query string]
+ * @apiParam {Boolean} is_active true / false [search query string]
 
  * @apiSuccessExample Example Response Format
 {

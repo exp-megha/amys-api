@@ -108,6 +108,7 @@ let getRetailer = (req, res) => {
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
+    var query = {};
     let retailer_query = {};
     Promise.all([]).then(() => {
         return searchAndFilters.retailerSearchQuery(req, req.query);

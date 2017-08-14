@@ -6,9 +6,10 @@ const _ = require('lodash');
 
 var InvoiceSchema = mongoose.Schema({
     retailer_id: { type: mongoose.Schema.Types.ObjectId, default: null },
-    address: { type: String, default: null, trim: true },
-    pan_number: { type: String, default: null, trim: true },
-    gst_registration_number: { type: String, default: null, trim: true },
+    retailer_address: { type: String, default: null, trim: true },
+    retailer_pan_number: { type: String, default: null, trim: true },
+    retailer_gst_registration_number: { type: String, default: null, trim: true },
+    retailer_state_code: { type: Number, default: null, trim: true },
     month: { type: Number, default: null, trim: true, required: true },
     year: { type: Number, default: true, trim: true },
     invoice_number: { type: String, default: null, trim: true },
@@ -26,6 +27,7 @@ var InvoiceSchema = mongoose.Schema({
             item_amount: { type: Number, default: null },
             quantity: { type: Number, default: null },
             unit_price_to_retailer: { type: Number, default: null },
+            total_unit_price_to_retailer: { type: Number, default: null },
             percentage_deduction: { type: Number, default: null },
             hsn_sac_code: { type: Number, default: null }
         }

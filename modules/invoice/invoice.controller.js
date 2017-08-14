@@ -1,5 +1,7 @@
 const _ = require('lodash');
-var { Item } = require('./../../models/invoice');
+var { Invoice } = require('./../../models/invoice');
+var { Item } = require('./../../models/item');
+var { Retailer } = require('./../../models/retailer');
 var { ApplicationSetting } = require('./../../models/applicationsetting');
 var searchAndFilters = require('./../../utils/searchAndFilters');
 var constants = require('./../../constants');
@@ -13,17 +15,26 @@ var changeCase = require('change-case');
 * @creted on 18-May-2017
 * @modified on 19-May-2017
 */
-var addItem = (req, res) => {
-    //item_of => Idea, Sun Direct 
-    //item_type => Coupon, Flexy, Easy etc.
-    //item_name => RAC 50, RAC 100 etc.
-    req.body.item_of = changeCase.titleCase(req.body.item_of);
-    req.body.item_name = req.body.item_name.toUpperCase();
-    req.body.item_type = changeCase.titleCase(req.body.item_type);
-    Item.findOne({ item_of: req.body.item_of, item_type: req.body.item_type, item_amount: req.body.item_amount })
-        .then((result) => {
-            if (result) {
-                return Promise.reject('Item-exists');
+var addInvoice = (req, res) => {
+    if (!req.body.retailer_id) {
+        res.status(400).message('retailer-id-required').returnFailure(null));
+    }
+    if (!req.body.invoice_number) {
+        res.status(400).message('invoice_number-required').returnFailure(null));
+    }
+    if (!req.body.invoice_date) {
+        res.status(400).message('invoice_date-required').returnFailure(null));
+    }
+    if (!req.body.invoice_total) {
+        res.status(400).message('invoice_total-required').returnFailure(null));
+    }
+    if (!req.body.item_list) {
+        res.status(400).message('item_list-required').returnFailure(null));
+    }
+    Retailer.findOne({ _id: req.body.retailer_id })
+        .then((retaler_data) => {
+            if (!retaler_data) {
+                return Promise.reject('Retailer-not-found');
             }
             Item.create(req.body, (err, data) => {
                 if (err) {
@@ -41,7 +52,7 @@ var addItem = (req, res) => {
  * @createdOn 19-May-2017
  * @updatedOn 29-June-2017 Sachin Kumar
  */
-let updateItem = (req, res) => {
+let updateInvoiceDetails = (req, res) => {
     req.body.item_of = changeCase.titleCase(req.body.item_of);
     req.body.item_name = req.body.item_name.toUpperCase();
     req.body.item_type = changeCase.titleCase(req.body.item_type);
@@ -69,7 +80,7 @@ let updateItem = (req, res) => {
  * @createdOn 19-May-2017
  */
 
-let getItem = (req, res) => {
+let getInvoices = (req, res) => {
     let limit = req.query.limit || constants.PAGE_LIMIT;
     let page = (req.query.page) ? parseInt(req.query.page) : 1;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
@@ -102,5 +113,5 @@ let getItem = (req, res) => {
 };
 
 module.exports = {
-    addItem, updateItem, getItem
+    addInvoice, getInvoices, updateInvoiceDetails
 };
