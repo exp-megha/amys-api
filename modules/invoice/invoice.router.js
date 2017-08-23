@@ -4,13 +4,13 @@ const router = express.Router();
 
 const routes = (authenticate) => {
 	router.route("/")
-		.get(authenticate.nonAuthenticate, controller.getInvoices)
-		.post(authenticate.nonAuthenticate, controller.addInvoice);
+		.get(authenticate.authenticate, controller.getInvoices)
+		.post(authenticate.authenticate, controller.addInvoice);
 
 	router.route("/:id")
-		.put(authenticate.nonAuthenticate, controller.updateInvoiceDetails)
-		.get(authenticate.nonAuthenticate, controller.getInvoiceDetails)
-		.delete(authenticate.nonAuthenticate, controller.cancelInvoice)
+		.put(authenticate.authenticate, controller.updateInvoiceDetails)
+		.get(authenticate.authenticate, controller.getInvoiceDetails)
+		.delete(authenticate.authenticate, controller.cancelInvoice)
 
 	return router;
 }

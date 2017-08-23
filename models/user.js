@@ -6,12 +6,10 @@ const _ = require('lodash');
 var constants = require('./../constants');
 
 var UserSchema = mongoose.Schema({
-    first_name: { type: String, default: null, trim: true, required: true },
-    last_name: { type: String, default: null, trim: true, required: true },
-    email: {
-        type: String, required: true, trim: true, minlength: 1, unique: true,
-        validate: { validator: validator.isEmail, message: '{VALUE} is not a valid email' }
-    },
+    platform: { type: String, default: 'idea', trim: true, required: true },
+    name: { type: String, default: null, trim: true },
+    description: { type: String, default: null, trim: true },
+    email: { type: String, trim: true },
     password: { type: String, required: true, minlength: 6 },
     user_token: { type: String, default: null, trim: true }
 },
@@ -23,7 +21,7 @@ var UserSchema = mongoose.Schema({
 UserSchema.methods.toJSON = function () {
     var user = this;
     var userObject = user.toObject();
-    return _.pick(userObject, ['-password', 'email', 'first_name', 'last_name', 'user_token']);
+    return _.pick(userObject, ['email', 'name', 'description', 'user_token', 'platform']);
 }
 
 UserSchema.methods.generateAuthToken = function () {
@@ -50,16 +48,18 @@ UserSchema.methods.removeToken = function (token) {
 UserSchema.statics.findByCredentials = function (login_details) {
     var User = this;
     /*Existence check for normal login*/
-    return User.findOne({ email: login_details.email}).then((user) => {
+    return User.findOne({ email: login_details.email, password: login_details.password }).then((user) => {
         if (!user) {
             return Promise.reject('invalid-email');
         } else {
-            return new Promise((resolve, reject) => {
-                bcrypt.compare(login_details.password, user.password).then((result) => {
-                    if (result) resolve(user);
-                    else reject('invalid-password');
-                });
-            });
+            // console.log(user)
+            return user;
+            // return new Promise((resolve, reject) => {
+            //     bcrypt.compare(login_details.password, user.password).then((result) => {
+            //         if (result) resolve(user);
+            //         else reject('invalid-password');
+            //     });
+            // });
         }
     });
 }

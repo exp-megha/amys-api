@@ -2,8 +2,9 @@ var moment = require('moment');
 var constants = require('../constants');
 var ObjectId = require('mongodb').ObjectId;
 
-var retailerSearchQuery = (req, reqQuery) => {
-    var filter_query = {};
+var retailerSearchQuery = (req, reqQuery, platform) => {
+    let filter_query = {"platform": platform};
+    // var filter_query = {};
     if (reqQuery.search_text) {
         var re = new RegExp(reqQuery.search_text, 'i');
         filter_query = {
@@ -39,8 +40,8 @@ var retailerSearchQuery = (req, reqQuery) => {
     return filter_query;
 }
 
-let itemSearchQuery = (request) => {
-    let search_query = {};
+let itemSearchQuery = (request, platform) => {
+    let search_query = {"platform": platform};
     if (request.item_name) {
         search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i")
     }
@@ -63,8 +64,9 @@ let itemSearchQuery = (request) => {
     return search_query;
 }
 
-let invoiceSearchQuery = (request) => {
-    let search_query = {};
+let invoiceSearchQuery = (request, platform) => {
+    let search_query = {"platform": platform};
+    // let search_query = {};
     if (request.retailer_id) {
         search_query["retailer_id"] = new RegExp('^.*' + request.retailer_id + '.*$', "i")
     }

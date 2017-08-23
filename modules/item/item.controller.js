@@ -20,11 +20,12 @@ var addItem = (req, res) => {
     req.body.item_of = changeCase.titleCase(req.body.item_of);
     req.body.item_name = req.body.item_name.toUpperCase();
     req.body.item_type = changeCase.titleCase(req.body.item_type);
-    Item.findOne({ item_of: req.body.item_of, item_type: req.body.item_type, item_amount: req.body.item_amount })
+    Item.findOne({ item_of: req.user.platform, item_type: req.body.item_type, item_amount: req.body.item_amount })
         .then((result) => {
             if (result) {
                 return Promise.reject('Item-exists');
             }
+            req.body.platform = req.user.platform;
             Item.create(req.body, (err, data) => {
                 if (err) {
                     return Promise.reject('failed-to-add-Item');
@@ -50,6 +51,7 @@ let updateItem = (req, res) => {
             if (!item) {
                 return Promise.reject('Item-not-found');
             }
+            req.body.platform = req.user.platform;
             return Item.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
         })
         .then((result) => {
@@ -80,16 +82,20 @@ let getItem = (req, res) => {
     }
     let item_query = {};
     Promise.all([]).then(() => {
-        return searchAndFilters.itemSearchQuery(req.query);
+        return searchAndFilters.itemSearchQuery(req.query, req.user.platform);
     })
         .then((query) => {
-            // console.log("query: ", query);
+            console.log("query: ", query);
             item_query = query;
             return Item.count(query);
         })
         .then((count) => {
             req.query.total_count = count;
-            return Item.find(item_query).sort(sort_by_field).limit(limit).skip(skip);
+            let select_fields = {};
+            if (req.query.from == 'dropdown') {
+                select_fields = { _id: 1, item_name_and_type: 1, item_name: 1, item_type: 1 };
+            }
+            return Item.find(item_query).select(select_fields).sort(sort_by_field).limit(limit).skip(skip);
         })
         .then((items) => {
             if (!items) {

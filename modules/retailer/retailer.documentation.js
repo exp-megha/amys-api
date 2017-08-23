@@ -293,3 +293,71 @@
    "data": null
  }
  */
+/**
+ * @api {get} /retailers?from=dropdown Get Retailers List for using in Drop down
+ * @apiName Retailer : getRetailerForDropDown
+ * @apiGroup Retailer
+ *
+ * @apiParam {Boolean} is_active true / false [search query string]
+
+ * @apiSuccessExample Example Response Format
+{
+    "status": 1,
+    "message": "retailer-list-success",
+    "code": 200,
+    "totalRecords": 7,
+    "limitPerPage": 100000,
+    "page": 1,
+    "searchparams": {
+        "from": "dropdown",
+        "total_count": 7
+    },
+    "data": [
+        {
+            "_id": "599d94e206d0a80011ecd85d",
+            "name": "Amys"
+        },
+        {
+            "_id": "598566b850633c19f4920a8f",
+            "name": "Amys Agencies Updated"
+        },
+        {
+            "_id": "5997c6e332c9c60011c87a00",
+            "name": "Idea"
+        },
+        {
+            "_id": "59947fcf6072cd00114994ea",
+            "name": "R"
+        },
+        {
+            "_id": "5997e231b99a20001147a0d0",
+            "name": "Yamuna"
+        },
+        {
+            "_id": "5985646df1cffd19d446e11c",
+            "name": "Yanuma Communications"
+        },
+        {
+            "_id": "59856a70123c7d1234363fb8",
+            "name": "Yanuma Communications Varkkala"
+        }
+    ]
+}
+*
+*@apiErrorExample {json} Error-Response: 'validation error'
+*
+{
+    "status": 1,
+    "message": "retailer-list-success",
+    "code": 200,
+    "totalRecords": 0,
+    "limitPerPage": 100000,
+    "page": 1,
+    "searchparams": {
+        "name": "agencfdg",
+        "total_count": 0
+    },
+    "data": []
+}
+*
+*/

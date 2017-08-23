@@ -56,12 +56,18 @@ var addInvoice = (req, res) => {
             if (!retaler_data) {
                 return Promise.reject('Retailer-not-found');
             }
+            req.body.platform = req.user.platform;
             req.body.retailer_name = retaler_data.name;
             req.body.retailer_address = retaler_data.address;
             req.body.retailer_pan_number = retaler_data.pan_number;
             req.body.retailer_gst_registration_number = retaler_data.gst_registration_number;
             req.body.retailer_state_code = retaler_data.state_code;
-            return ApplicationSetting.findOne({ settings_name: "latest_invoice_id" });
+            if (req.user.platform == 'Idea') {
+                let setting_qry = { settings_name: "latest_idea_invoice_id" };
+            } else {
+                let setting_qry = { settings_name: "latest_sundirect_invoice_id" };
+            }
+            return ApplicationSetting.findOne(setting_qry);
         })
         .then((invoice_data) => {
             if (!invoice_data) {
@@ -127,6 +133,7 @@ let updateInvoiceDetails = (req, res) => {
             req.body.retailer_state_code = retaler_data.state_code;
             req.body.month = Number(moment(parseInt(req.body.invoice_date)).format('M'));
             req.body.year = Number(moment(parseInt(req.body.invoice_date)).format('YYYY'));
+            req.body.platform = req.user.platform;
             return Invoice.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
         })
         .then((result) => {
@@ -157,7 +164,7 @@ let getInvoices = (req, res) => {
     }
     let query = {};
     Promise.all([]).then(() => {
-        return searchAndFilters.invoiceSearchQuery(req.query);
+        return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
     })
         .then((search_query) => {
             console.log(search_query);

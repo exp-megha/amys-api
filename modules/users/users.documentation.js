@@ -10,16 +10,16 @@
     "code": 200,
     "data": [
         {
-            "settings_name": "latest_invoice_id",
-            "settings_value": "INV3"
+            "latest_idea_invoice_id": "INV9"
         },
         {
-            "settings_name": "cgst_percentage",
-            "settings_value": "9"
+            "latest_sundirect_invoice_id": "INV3"
         },
         {
-            "settings_name": "sgst_percentage",
-            "settings_value": "9"
+            "cgst_percentage": "9"
+        },
+        {
+            "sgst_percentage": "9"
         }
     ]
 }

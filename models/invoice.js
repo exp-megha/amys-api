@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
 var InvoiceSchema = mongoose.Schema({
+    platform: { type: String, trim: true},
     retailer_id: { type: mongoose.Schema.Types.ObjectId, default: null },
     retailer_name: { type: String, default: null, trim: true },
     retailer_address: { type: String, default: null, trim: true },

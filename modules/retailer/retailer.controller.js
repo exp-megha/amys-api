@@ -44,6 +44,7 @@ var addRetailer = (req, res) => {
             if (result) {
                 return Promise.reject('retailer-exists');
             }
+            req.body.platform = req.user.platform;
             Retailer.create(req.body, (err, data) => {
                 if (err) {
                     return Promise.reject('failed-to-add-retailer');
@@ -70,6 +71,7 @@ let updateRetailer = (req, res) => {
             if (!retailer) {
                 return Promise.reject('retailer-not-found');
             }
+            req.body.platform = req.user.platform;
             return Retailer.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
         })
         .then((result) => {
@@ -100,15 +102,20 @@ let getRetailer = (req, res) => {
     }
     let retailer_query = {};
     Promise.all([]).then(() => {
-        return searchAndFilters.retailerSearchQuery(req, req.query);
+        return searchAndFilters.retailerSearchQuery(req, req.query, req.user.platform);
     })
         .then((query) => {
+            console.log("query: ", query);
             retailer_query = query;
             return Retailer.count(query);
         })
         .then((count) => {
             req.query.total_count = count;
-            return Retailer.find(retailer_query).sort(sort_by_field).limit(limit).skip(skip);
+            let select_fields = {};
+            if (req.query.from == 'dropdown') {
+                select_fields = { _id: 1, name: 1 };
+            }
+            return Retailer.find(retailer_query).select(select_fields).sort(sort_by_field).limit(limit).skip(skip);
         })
         .then((retailers) => {
             if (!retailers) {

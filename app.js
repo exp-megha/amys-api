@@ -15,16 +15,6 @@ var authenticate = require('./middleware/authentication');
 var {cors} = require('./middleware/cors');
 var {response} = require('./middleware/response');
 var i18n = require('./middleware/i18n');
-// var cron = require('node-cron');
-// var no2fymePreferences = require('./utils/no2fymePreferences');
-
-// =======================
-// Cron Jobs Configuration
-// =======================
-// cron.schedule('* * * * *', function(){
-//   console.log('running a task every minute');
-//   no2fymePreferences.getNo2fymeNotification();
-// });
 
 // =======================
 // Configuration

@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
 var ItemSchema = mongoose.Schema({
+    platform: { type: String, trim: true},
     item_of: { type: String, default: null },
     item_type: { type: String, default: null },
     item_name: { type: String, default: null },
@@ -22,8 +23,9 @@ var ItemSchema = mongoose.Schema({
 ItemSchema.methods.toJSON = function () {
     var reason = this;
     var reasonObject = reason.toObject();
+    reasonObject.item_name_and_type = reasonObject.item_name + ' - ' + reasonObject.item_type;
     return _.pick(reasonObject,
-        ['_id', 'item_of', 'item_type', 'item_name', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code', 'is_active']);
+        ['platform', '_id', 'item_of', 'item_type', 'item_name', 'item_name_and_type', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code', 'is_active']);
 }
 
 var Item = mongoose.model("Item", ItemSchema);

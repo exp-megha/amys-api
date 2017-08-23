@@ -3,7 +3,6 @@
  * @apiName Item : getItem
  * @apiGroup Item
  *
- * @apiParam {string} item_of values would be "Idea", "SunDirect [search query string].
  * @apiParam {string} item_name search query string.
  * @apiParam {string} item_type search query string.
  * @apiParam {Number} item_amount search query string.
@@ -257,3 +256,54 @@
    "data": null
  }
  */
+/**
+ * @api {get} /items?from=dropdown Get Items list for using in Drop Down
+ * @apiName Item : getItemForDropDown
+ * @apiGroup Item
+ * 
+ * @apiParam {Boolean} is_active true / false [search query string]
+ * @apiSuccessExample Example Response Format
+{
+    "status": 1,
+    "message": "item-list-success",
+    "code": 200,
+    "totalRecords": 6,
+    "limitPerPage": 100000,
+    "page": 1,
+    "searchparams": {
+        "from": "dropdown",
+        "total_count": 6
+    },
+    "data": [
+        {
+            "_id": "5985ec326689701e14a04419",
+            "item_type": "Flexy",
+            "item_name": "2000",
+            "item_name_and_type": "2000 - Flexy"
+        },
+        {
+            "_id": "5997df1f32c9c60011c87a01",
+            "item_type": "222",
+            "item_name": "2222",
+            "item_name_and_type": "2222 - 222"
+        }
+    ]
+}
+*
+*@apiErrorExample {json} Error-Response: 'validation error'
+*
+{
+    "status": 1,
+    "message": "Item-list-success",
+    "code": 200,
+    "totalRecords": 0,
+    "limitPerPage": 100000,
+    "page": 1,
+    "searchparams": {
+        "name": "agencfdg",
+        "total_count": 0
+    },
+    "data": []
+}
+*
+*/

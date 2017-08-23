@@ -1,6 +1,7 @@
 const _ = require('lodash');
 var { Retailer } = require('./../../models/retailer');
 var { ApplicationSetting } = require('./../../models/applicationsetting');
+var { User } = require('./../../models/user');
 var searchAndFilters = require('./../../utils/searchAndFilters');
 var constants = require('./../../constants');
 var ObjectId = require('mongodb').ObjectId;
@@ -33,6 +34,19 @@ let applicationSettings = (req, res) => {
         });
 }
 
+let login = (req, res) => {
+    User.findByCredentials(req.body)
+        .then((user) => {
+            user.generateAuthToken().then((token) => {
+                if (token) {
+                    return res.status(200).message('login-successful').returnSuccess(user);
+                } else {
+                    return Promise.reject('login-failed');
+                }
+            })
+        }).catch((e) => res.status(401).message(e).returnFailure(null));
+}
+
 module.exports = {
-    applicationSettings
+    applicationSettings, login
 };

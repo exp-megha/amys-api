@@ -4,8 +4,13 @@ const router = express.Router();
 
 const routes = (authenticate) => {
 
+	router.route("/login")
+		.post(authenticate.nonAuthenticate, controller.login);
+
 	router.route("/applicationSettings")
-		.get(authenticate.nonAuthenticate, controller.applicationSettings);
+		.get(authenticate.authenticate, controller.applicationSettings);
+
+
 
 	return router;
 }

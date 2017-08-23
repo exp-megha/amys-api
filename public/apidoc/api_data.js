@@ -641,13 +641,6 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "item_of",
-            "description": "<p>values would be &quot;Idea&quot;, &quot;SunDirect [search query string].</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
             "field": "item_name",
             "description": "<p>search query string.</p>"
           },
@@ -737,6 +730,47 @@ define({ "api": [
         {
           "title": "Error-Response: 'validation error'",
           "content": "\n{\n    \"status\": 0,\n    \"message\": \"Bad Request\",\n    \"code\": 400,\n    \"data\": null\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "modules/item/item.documentation.js",
+    "groupTitle": "Item"
+  },
+  {
+    "type": "get",
+    "url": "/items?from=dropdown",
+    "title": "Get Items list for using in Drop Down",
+    "name": "Item___getItemForDropDown",
+    "group": "Item",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_active",
+            "description": "<p>true / false [search query string]</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Example Response Format",
+          "content": "{\n    \"status\": 1,\n    \"message\": \"item-list-success\",\n    \"code\": 200,\n    \"totalRecords\": 6,\n    \"limitPerPage\": 100000,\n    \"page\": 1,\n    \"searchparams\": {\n        \"from\": \"dropdown\",\n        \"total_count\": 6\n    },\n    \"data\": [\n        {\n            \"_id\": \"5985ec326689701e14a04419\",\n            \"item_type\": \"Flexy\",\n            \"item_name\": \"2000\",\n            \"item_name_and_type\": \"2000 - Flexy\"\n        },\n        {\n            \"_id\": \"5997df1f32c9c60011c87a01\",\n            \"item_type\": \"222\",\n            \"item_name\": \"2222\",\n            \"item_name_and_type\": \"2222 - 222\"\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response: 'validation error'",
+          "content": "\n{\n    \"status\": 1,\n    \"message\": \"Item-list-success\",\n    \"code\": 200,\n    \"totalRecords\": 0,\n    \"limitPerPage\": 100000,\n    \"page\": 1,\n    \"searchparams\": {\n        \"name\": \"agencfdg\",\n        \"total_count\": 0\n    },\n    \"data\": []\n}",
           "type": "json"
         }
       ]
@@ -1230,6 +1264,47 @@ define({ "api": [
     "groupTitle": "Retailer"
   },
   {
+    "type": "get",
+    "url": "/retailers?from=dropdown",
+    "title": "Get Retailers List for using in Drop down",
+    "name": "Retailer___getRetailerForDropDown",
+    "group": "Retailer",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_active",
+            "description": "<p>true / false [search query string]</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Example Response Format",
+          "content": "{\n    \"status\": 1,\n    \"message\": \"retailer-list-success\",\n    \"code\": 200,\n    \"totalRecords\": 7,\n    \"limitPerPage\": 100000,\n    \"page\": 1,\n    \"searchparams\": {\n        \"from\": \"dropdown\",\n        \"total_count\": 7\n    },\n    \"data\": [\n        {\n            \"_id\": \"599d94e206d0a80011ecd85d\",\n            \"name\": \"Amys\"\n        },\n        {\n            \"_id\": \"598566b850633c19f4920a8f\",\n            \"name\": \"Amys Agencies Updated\"\n        },\n        {\n            \"_id\": \"5997c6e332c9c60011c87a00\",\n            \"name\": \"Idea\"\n        },\n        {\n            \"_id\": \"59947fcf6072cd00114994ea\",\n            \"name\": \"R\"\n        },\n        {\n            \"_id\": \"5997e231b99a20001147a0d0\",\n            \"name\": \"Yamuna\"\n        },\n        {\n            \"_id\": \"5985646df1cffd19d446e11c\",\n            \"name\": \"Yanuma Communications\"\n        },\n        {\n            \"_id\": \"59856a70123c7d1234363fb8\",\n            \"name\": \"Yanuma Communications Varkkala\"\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response: 'validation error'",
+          "content": "\n{\n    \"status\": 1,\n    \"message\": \"retailer-list-success\",\n    \"code\": 200,\n    \"totalRecords\": 0,\n    \"limitPerPage\": 100000,\n    \"page\": 1,\n    \"searchparams\": {\n        \"name\": \"agencfdg\",\n        \"total_count\": 0\n    },\n    \"data\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "modules/retailer/retailer.documentation.js",
+    "groupTitle": "Retailer"
+  },
+  {
     "type": "put",
     "url": "/retailers/:id",
     "title": "Update Retailer",
@@ -1401,7 +1476,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Example Response Format",
-          "content": "{\n    \"status\": 1,\n    \"message\": \"Application-settings-retrieved-successfully\",\n    \"code\": 200,\n    \"data\": [\n        {\n            \"settings_name\": \"latest_invoice_id\",\n            \"settings_value\": \"INV3\"\n        },\n        {\n            \"settings_name\": \"cgst_percentage\",\n            \"settings_value\": \"9\"\n        },\n        {\n            \"settings_name\": \"sgst_percentage\",\n            \"settings_value\": \"9\"\n        }\n    ]\n}",
+          "content": "{\n    \"status\": 1,\n    \"message\": \"Application-settings-retrieved-successfully\",\n    \"code\": 200,\n    \"data\": [\n        {\n            \"latest_idea_invoice_id\": \"INV9\"\n        },\n        {\n            \"latest_sundirect_invoice_id\": \"INV3\"\n        },\n        {\n            \"cgst_percentage\": \"9\"\n        },\n        {\n            \"sgst_percentage\": \"9\"\n        }\n    ]\n}",
           "type": "json"
         }
       ]

@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
 var RetailerSchema = mongoose.Schema({
+    platform: { type: String, trim: true},
     name: { type: String, default: null, trim: true },
     email: { type: String, default: null, trim: true },
     is_active: { type: Boolean, default: true, trim: true },

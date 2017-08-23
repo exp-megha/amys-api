@@ -4,15 +4,15 @@ const router = express.Router();
 
 const routes = (authenticate) => {
 	router.route("/")
-		.get(authenticate.nonAuthenticate, controller.getRetailer)
-		.post(authenticate.nonAuthenticate, controller.addRetailer);
+		.get(authenticate.authenticate, controller.getRetailer)
+		.post(authenticate.authenticate, controller.addRetailer);
 
 	router.route("/:id")
-		.put(authenticate.nonAuthenticate, controller.updateRetailer)
-		.get(authenticate.nonAuthenticate, controller.getRetailerDetails);
+		.put(authenticate.authenticate, controller.updateRetailer)
+		.get(authenticate.authenticate, controller.getRetailerDetails);
 
 	router.route("/:id/activateInactivate")
-		.put(authenticate.nonAuthenticate, controller.activateInactivate)
+		.put(authenticate.authenticate, controller.activateInactivate)
 
 	return router;
 }
