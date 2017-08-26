@@ -93,9 +93,11 @@ let getItem = (req, res) => {
             req.query.total_count = count;
             let select_fields = {};
             if (req.query.from == 'dropdown') {
-                select_fields = { _id: 1, item_name_and_type: 1, item_name: 1, item_type: 1 };
+                select_fields = { _id: 1, text: 1, item_name: 1, item_type: 1, id: 1 };
+                return Item.find(item_query).select(select_fields).sort(sort_by_field);
+            } else {
+                return Item.find(item_query).select(select_fields).sort(sort_by_field).limit(limit).skip(skip);
             }
-            return Item.find(item_query).select(select_fields).sort(sort_by_field).limit(limit).skip(skip);
         })
         .then((items) => {
             if (!items) {

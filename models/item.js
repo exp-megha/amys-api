@@ -23,9 +23,10 @@ var ItemSchema = mongoose.Schema({
 ItemSchema.methods.toJSON = function () {
     var reason = this;
     var reasonObject = reason.toObject();
-    reasonObject.item_name_and_type = reasonObject.item_name + ' - ' + reasonObject.item_type;
+    reasonObject.text = reasonObject.item_name + ' - ' + reasonObject.item_type;
+    reasonObject.id = reasonObject._id;
     return _.pick(reasonObject,
-        ['platform', '_id', 'item_of', 'item_type', 'item_name', 'item_name_and_type', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code', 'is_active']);
+        ['platform', '_id', 'item_of', 'item_type', 'item_name', 'id', 'text', 'item_amount', 'unit_price_to_retailer', 'percentage_deduction', 'hsn_sac_code', 'is_active']);
 }
 
 var Item = mongoose.model("Item", ItemSchema);

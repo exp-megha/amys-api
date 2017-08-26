@@ -279,13 +279,43 @@
             "_id": "5985ec326689701e14a04419",
             "item_type": "Flexy",
             "item_name": "2000",
-            "item_name_and_type": "2000 - Flexy"
+            "id": "5985ec326689701e14a04419",
+            "text": "2000 - Flexy"
         },
         {
             "_id": "5997df1f32c9c60011c87a01",
             "item_type": "222",
             "item_name": "2222",
-            "item_name_and_type": "2222 - 222"
+            "id": "5997df1f32c9c60011c87a01",
+            "text": "2222 - 222"
+        },
+        {
+            "_id": "5985eb29acc2a51eac48750b",
+            "item_type": "Coupon",
+            "item_name": "RSC 50",
+            "id": "5985eb29acc2a51eac48750b",
+            "text": "RSC 50 - Coupon"
+        },
+        {
+            "_id": "5985f16e1bd5da1e98f538e9",
+            "item_type": "Coupon",
+            "item_name": "RSC 100",
+            "id": "5985f16e1bd5da1e98f538e9",
+            "text": "RSC 100 - Coupon"
+        },
+        {
+            "_id": "5997e256b99a20001147a0d1",
+            "item_type": "Flexy",
+            "item_name": "TEST",
+            "id": "5997e256b99a20001147a0d1",
+            "text": "TEST - Flexy"
+        },
+        {
+            "_id": "599d963506d0a80011ecd860",
+            "item_type": "Flexy",
+            "item_name": "450",
+            "id": "599d963506d0a80011ecd860",
+            "text": "450 - Flexy"
         }
     ]
 }

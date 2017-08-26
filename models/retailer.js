@@ -29,8 +29,10 @@ RetailerSchema.methods.toJSON = function () {
     var Retailer = this;
 
     var RetailerObject = Retailer.toObject();
+    RetailerObject.text = RetailerObject.name;
+    RetailerObject.id = RetailerObject._id;
     return _.pick(RetailerObject, ['_id', 'name', 'is_active', 'address', 'city', 'state_code', 'state', 'zip',
-        'phone_number', 'pan_number', 'gst_registration_number', 'place_of_supply', 'is_active'
+        'phone_number', 'pan_number', 'gst_registration_number', 'place_of_supply', 'is_active', 'text', 'id'
     ]);
 }
 
