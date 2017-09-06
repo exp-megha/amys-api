@@ -35,6 +35,7 @@ let applicationSettings = (req, res) => {
 }
 
 let login = (req, res) => {
+    console.log('--------------------', req.body);
     User.findByCredentials(req.body)
         .then((user) => {
             user.generateAuthToken().then((token) => {
@@ -44,7 +45,7 @@ let login = (req, res) => {
                     return Promise.reject('login-failed');
                 }
             })
-        }).catch((e) => res.status(401).message(e).returnFailure(null));
+        }).catch((e) => res.status(401).message('in errorrrrrr').returnFailure(null));
 }
 
 module.exports = {

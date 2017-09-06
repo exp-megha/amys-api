@@ -36,7 +36,7 @@ let getRetailerDetails = (req, res) => {
 */
 var addRetailer = (req, res) => {
     req.body.name = changeCase.titleCase(req.body.name);
-    req.body.email = req.body.email.toLowerCase();
+    // req.body.email = req.body.email.toLowerCase();
     req.body.address = changeCase.titleCase(req.body.address);
     req.body.state = changeCase.titleCase(req.body.state);
     Retailer.findOne({ name: req.body.name, phone_number: req.body.phone_number })
@@ -63,7 +63,7 @@ var addRetailer = (req, res) => {
  */
 let updateRetailer = (req, res) => {
     req.body.name = changeCase.titleCase(req.body.name);
-    req.body.email = req.body.email.toLowerCase();
+    // req.body.email = req.body.email.toLowerCase();
     req.body.address = changeCase.titleCase(req.body.address);
     req.body.state = changeCase.titleCase(req.body.state);
     Retailer.findOne({ '_id': req.params.id })

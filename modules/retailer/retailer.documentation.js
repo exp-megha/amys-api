@@ -342,7 +342,7 @@
             "name": "Yamuna",
             "text": "Yamuna",
             "id": "5997e231b99a20001147a0d0"
-        },
+        },gi
         {
             "_id": "5985646df1cffd19d446e11c",
             "name": "Yanuma Communications",
