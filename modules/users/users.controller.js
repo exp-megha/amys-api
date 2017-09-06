@@ -35,10 +35,10 @@ let applicationSettings = (req, res) => {
 }
 
 let login = (req, res) => {
-    console.log('--------------------', req.body);
+    // console.log('--------------------', req.body);
     User.findByCredentials(req.body)
         .then((user) => {
-            console.log('user: ',user)
+            // console.log('user: ',user)
             user.generateAuthToken().then((token) => {
                 console.log('token 2222: ',token)
                 if (token) {

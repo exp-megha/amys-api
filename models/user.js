@@ -26,7 +26,8 @@ UserSchema.methods.toJSON = function () {
 
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
-    console.log('user 0000: ', user);
+    // console.log('user 0000: ', user);
+    console.log('process.env.JWT_SECRET 00000000: ', process.env.JWT_SECRET);
     var access = 'auth';
     var token = jwt.sign({
         _id: user._id.toHexString(),
