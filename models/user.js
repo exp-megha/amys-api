@@ -26,8 +26,6 @@ UserSchema.methods.toJSON = function () {
 
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
-    // console.log('user 0000: ', user);
-    console.log('process.env.JWT_SECRET 00000000: ', process.env.JWT_SECRET);
     var access = 'auth';
     var token = jwt.sign({
         _id: user._id.toHexString(),
@@ -36,7 +34,6 @@ UserSchema.methods.generateAuthToken = function () {
     }, process.env.JWT_SECRET).toString();
 
     user.user_token = token;
-    console.log('user.user_token 1111: ', user.user_token);
     return user.save().then(() => token);
 };
 
@@ -55,7 +52,7 @@ UserSchema.statics.findByCredentials = function (login_details) {
         if (!user) {
             return Promise.reject('invalid-email');
         } else {
-            // console.log('findByCredentials: ',user)
+            // console.log(user)
             return user;
             // return new Promise((resolve, reject) => {
             //     bcrypt.compare(login_details.password, user.password).then((result) => {

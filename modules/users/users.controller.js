@@ -35,19 +35,16 @@ let applicationSettings = (req, res) => {
 }
 
 let login = (req, res) => {
-    // console.log('--------------------', req.body);
     User.findByCredentials(req.body)
         .then((user) => {
-            // console.log('user: ',user)
             user.generateAuthToken().then((token) => {
-                console.log('token 2222: ',token)
                 if (token) {
                     return res.status(200).message('login-successful').returnSuccess(user);
                 } else {
                     return Promise.reject('login-failed');
                 }
             })
-        }).catch((e) => res.status(401).message('in errorrrrrr').returnFailure(null));
+        }).catch((e) => res.status(401).message(e).returnFailure(null));
 }
 
 module.exports = {
