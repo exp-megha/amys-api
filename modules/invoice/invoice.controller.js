@@ -63,11 +63,10 @@ var addInvoice = (req, res) => {
             req.body.retailer_gst_registration_number = retaler_data.gst_registration_number;
             req.body.retailer_state_code = retaler_data.state_code;
             if (req.user.platform == 'Idea') {
-                let setting_qry = { settings_name: "latest_idea_invoice_id" };
+                return ApplicationSetting.findOne({ settings_name: "latest_idea_invoice_id" });
             } else {
-                let setting_qry = { settings_name: "latest_sundirect_invoice_id" };
+                return ApplicationSetting.findOne({ settings_name: "latest_sundirect_invoice_id" });
             }
-            return ApplicationSetting.findOne(setting_qry);
         })
         .then((invoice_data) => {
             if (!invoice_data) {
@@ -206,7 +205,7 @@ let cancelInvoice = (req, res) => {
             if (!invoice) {
                 return Promise.reject('Item-not-found');
             }
-            return Invoice.findByIdAndUpdate({ _id: req.params.id }, {'is_active': false}, { new: true });
+            return Invoice.findByIdAndUpdate({ _id: req.params.id }, { 'is_active': false }, { new: true });
         })
         .then((result) => {
             if (!result) {
