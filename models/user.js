@@ -11,7 +11,15 @@ var UserSchema = mongoose.Schema({
     description: { type: String, default: null, trim: true },
     email: { type: String, trim: true },
     password: { type: String, required: true, minlength: 6 },
-    user_token: { type: String, default: null, trim: true }
+    user_token: { type: String, default: null, trim: true },
+    address: { type: String, default: null, trim: true },
+    city: { type: String, default: null, trim: true },
+    state_code: { type: Number, default: null, trim: true },
+    state: { type: String, default: null, trim: true },
+    zip: { type: Number, default: null, trim: true },
+    phone_number: { type: Number, default: null, trim: true },
+    pan_number: { type: String, default: null, trim: true },
+    gst_registration_number: { type: String, default: null, trim: true }
 },
     {
         timestamps: true,
@@ -21,7 +29,8 @@ var UserSchema = mongoose.Schema({
 UserSchema.methods.toJSON = function () {
     var user = this;
     var userObject = user.toObject();
-    return _.pick(userObject, ['email', 'name', 'description', 'user_token', 'platform']);
+    return _.pick(userObject, ['email', 'name', 'description', 'user_token', 'platform', 'address', 'city', 
+    'state_code', 'state', 'zip', 'phone_number', 'pan_number', 'gst_registration_number']);
 }
 
 UserSchema.methods.generateAuthToken = function () {

@@ -185,15 +185,29 @@ let getInvoices = (req, res) => {
 };
 
 let getInvoiceDetails = (req, res) => {
+    console.log('-----------------------------');
     if (!req.params.id) {
         res.status(400).message('item_id-required').returnFailure(null);
     }
-    Invoice.findOne({ '_id': req.params.id })
+    var invoice_data = {};
+    Invoice.findOne({ '_id': req.params.id }).lean()
         .then((invoice) => {
             if (!invoice) {
                 return Promise.reject('invoice-not-found');
             }
-            return res.status(200).message('invoice-information-retrieved-successfully').returnSuccess(invoice);
+            invoice.dealer_name = req.user.name;
+            invoice.dealer_address = req.user.address;
+            invoice.dealer_city = req.user.city;
+            invoice.dealer_state_code = req.user.state_code;
+            invoice.dealer_state = req.user.state;
+            invoice.dealer_zip = req.user.zip;
+            invoice.dealer_phone_number = req.user.phone_number;
+            invoice.dealer_pan_number = req.user.pan_number;
+            invoice.dealer_gst_registration_number = req.user.gst_registration_number;
+            return invoice;
+        })
+        .then((final_output) => {
+            return res.status(200).message('invoice-information-retrieved-successfully').returnSuccess(final_output);
         }).catch((err) => {
             res.status(400).message(err).returnFailure(null);
         });
