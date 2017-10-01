@@ -11,7 +11,7 @@ var RetailerSchema = mongoose.Schema({
     is_active: { type: Boolean, default: true, trim: true },
     address: { type: String, default: null, trim: true },
     city: { type: String, default: null, trim: true },
-    state_code: { type: Number, default: null, trim: true },
+    state_code: { type: Number, default: 32, trim: true },
     state: { type: String, default: null, trim: true },
     zip: { type: Number, default: null, trim: true },
     phone_number: { type: Number, default: null, trim: true },

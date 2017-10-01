@@ -119,7 +119,7 @@ let getRetailer = (req, res) => {
         })
         .then((retailers) => {
             if (!retailers) {
-                return Promise.reject('no-records-found');
+                retailers = [];
             }
             return res.status(200).message('retailer-list-success').returnListSuccess(retailers, req.query);
         }).catch((e) => {

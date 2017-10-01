@@ -62,6 +62,8 @@ var addInvoice = (req, res) => {
             req.body.retailer_pan_number = retaler_data.pan_number;
             req.body.retailer_gst_registration_number = retaler_data.gst_registration_number;
             req.body.retailer_state_code = retaler_data.state_code;
+            req.body.retailer_phone_number = retaler_data.phone_number;
+            req.body.retailer_place_of_supply = retaler_data.place_of_supply;
             if (req.user.platform == 'Idea') {
                 return ApplicationSetting.findOne({ settings_name: "latest_idea_invoice_id" });
             } else {
