@@ -146,8 +146,9 @@
    * @apiParam {Number} cgst_amount cgst amount of the total tax according to the cgst percentage.
    * @apiParam {Number} sgst_amount sgst amount of the total tax according to the sgst percentage.
    * @apiParam {Number} total_gst Sum of cgst and sgst amounts.
+   * @apiParam {Number} total_discount Sum of discount amounts.
    * @apiParam {Number} invoice_total Sum of the total_before_tax and total_gst.
-   * @apiParam {Array} item_list list of items added to the invoice with details of each item, quantity and total_unit_price_to_retailer the 
+   * @apiParam {Array} item_list list of items added to the invoice with details of each discount, item, quantity and total_unit_price_to_retailer the 
   * @apiSuccessExample Example Request Format
  {
   "retailer_id": "598564e182fb2712703a07a5",
@@ -156,9 +157,11 @@
   "cgst_amount": 110.25,
   "sgst_amount": 110.25,
   "total_gst": 550.50,
+  "total_discount": 185.00,
   "invoice_total": 1271,
   "item_list": [
         {
+            "discount": 185,
         	"item_id": "5985eb29acc2a51eac48750b",
 		    "hsn_sac_code" : "2343dsgfsdg",
 		    "percentage_deduction" : 3.5,
@@ -171,7 +174,7 @@
 		    "item_of" : "Idea"
         },
         {
-		    "_id" : "5985f16e1bd5da1e98f538e9",
+            "discount": 0,		    
 		    "hsn_sac_code" : "2343dsgfsdg",
 		    "percentage_deduction" : 3.5,
 		    "unit_price_to_retailer" : 99,
@@ -264,6 +267,7 @@
    * @apiParam {string} total_before_tax total amount before applying the gst tax amount.
    * @apiParam {Number} cgst_amount cgst amount of the total tax according to the cgst percentage.
    * @apiParam {Number} sgst_amount sgst amount of the total tax according to the sgst percentage.
+   * @apiParam {Number} total_discount Sum of discount amounts.
    * @apiParam {Number} total_gst Sum of cgst and sgst amounts.
    * @apiParam {Number} invoice_total Sum of the total_before_tax and total_gst.
    * @apiParam {Array} item_list list of items added to the invoice with details of each item, quantity and total_unit_price_to_retailer the 
@@ -275,9 +279,11 @@
   "cgst_amount": 110.25,
   "sgst_amount": 110.25,
   "total_gst": 550.50,
+  "total_discount": 150.00,
   "invoice_total": 1271,
   "item_list": [
         {
+            "discount": 100,
         	"item_id": "5985eb29acc2a51eac48750b",
 		    "hsn_sac_code" : "2343dsgfsdg",
 		    "percentage_deduction" : 3.5,
@@ -290,6 +296,7 @@
 		    "item_of" : "Idea"
         },
         {
+            "discount": 50,
 		    "_id" : "5985f16e1bd5da1e98f538e9",
 		    "hsn_sac_code" : "2343dsgfsdg",
 		    "percentage_deduction" : 3.5,

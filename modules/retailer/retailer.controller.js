@@ -92,7 +92,7 @@ let updateRetailer = (req, res) => {
  */
 
 let getRetailer = (req, res) => {
-    let limit = req.query.limit || constants.PAGE_LIMIT;
+    let limit = req.query.limit || 20;
     let page = (req.query.page) ? parseInt(req.query.page) : 1;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
     var sort_by_field = req.query.sort_by_field || "name";

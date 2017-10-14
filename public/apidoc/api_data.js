@@ -54,6 +54,13 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
+            "field": "total_discount",
+            "description": "<p>Sum of discount amounts.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
             "field": "invoice_total",
             "description": "<p>Sum of the total_before_tax and total_gst.</p>"
           },
@@ -62,7 +69,7 @@ define({ "api": [
             "type": "Array",
             "optional": false,
             "field": "item_list",
-            "description": "<p>list of items added to the invoice with details of each item, quantity and total_unit_price_to_retailer the</p>"
+            "description": "<p>list of items added to the invoice with details of each discount, item, quantity and total_unit_price_to_retailer the</p>"
           }
         ]
       }
@@ -71,7 +78,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Example Request Format",
-          "content": " {\n  \"retailer_id\": \"598564e182fb2712703a07a5\",\n  \"invoice_date\": 1502696505000,\n  \"total_before_tax\": 1050.50,\n  \"cgst_amount\": 110.25,\n  \"sgst_amount\": 110.25,\n  \"total_gst\": 550.50,\n  \"invoice_total\": 1271,\n  \"item_list\": [\n        {\n        \t\"item_id\": \"5985eb29acc2a51eac48750b\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 48,\n\t\t    \"total_unit_price_to_retailer\": 960,\n\t\t    \"quantity\": 40,\n\t\t    \"item_amount\" : 50,\n\t\t    \"item_name\" : \"RSC 50\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n        },\n        {\n\t\t    \"_id\" : \"5985f16e1bd5da1e98f538e9\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 99,\n\t\t    \"total_unit_price_to_retailer\": 9900,\n\t\t    \"quantity\": 10,\n\t\t    \"item_amount\" : 100,\n\t\t    \"item_name\" : \"RSC 100\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n\t\t}\n    ]\n}",
+          "content": " {\n  \"retailer_id\": \"598564e182fb2712703a07a5\",\n  \"invoice_date\": 1502696505000,\n  \"total_before_tax\": 1050.50,\n  \"cgst_amount\": 110.25,\n  \"sgst_amount\": 110.25,\n  \"total_gst\": 550.50,\n  \"total_discount\": 185.00,\n  \"invoice_total\": 1271,\n  \"item_list\": [\n        {\n            \"discount\": 185,\n        \t\"item_id\": \"5985eb29acc2a51eac48750b\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 48,\n\t\t    \"total_unit_price_to_retailer\": 960,\n\t\t    \"quantity\": 40,\n\t\t    \"item_amount\" : 50,\n\t\t    \"item_name\" : \"RSC 50\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n        },\n        {\n            \"discount\": 0,\t\t    \n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 99,\n\t\t    \"total_unit_price_to_retailer\": 9900,\n\t\t    \"quantity\": 10,\n\t\t    \"item_amount\" : 100,\n\t\t    \"item_name\" : \"RSC 100\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n\t\t}\n    ]\n}",
           "type": "json"
         },
         {
@@ -337,6 +344,13 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
+            "field": "total_discount",
+            "description": "<p>Sum of discount amounts.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
             "field": "total_gst",
             "description": "<p>Sum of cgst and sgst amounts.</p>"
           },
@@ -361,7 +375,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Example Request Format",
-          "content": " {\n  \"retailer_id\": \"598564e182fb2712703a07a5\",\n  \"invoice_date\": 1502696505000,\n  \"total_before_tax\": 1050.50,\n  \"cgst_amount\": 110.25,\n  \"sgst_amount\": 110.25,\n  \"total_gst\": 550.50,\n  \"invoice_total\": 1271,\n  \"item_list\": [\n        {\n        \t\"item_id\": \"5985eb29acc2a51eac48750b\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 48,\n\t\t    \"total_unit_price_to_retailer\": 960,\n\t\t    \"quantity\": 40,\n\t\t    \"item_amount\" : 50,\n\t\t    \"item_name\" : \"RSC 50\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n        },\n        {\n\t\t    \"_id\" : \"5985f16e1bd5da1e98f538e9\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 99,\n\t\t    \"total_unit_price_to_retailer\": 9900,\n\t\t    \"quantity\": 10,\n\t\t    \"item_amount\" : 100,\n\t\t    \"item_name\" : \"RSC 100\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n\t\t}\n    ]\n}",
+          "content": " {\n  \"retailer_id\": \"598564e182fb2712703a07a5\",\n  \"invoice_date\": 1502696505000,\n  \"total_before_tax\": 1050.50,\n  \"cgst_amount\": 110.25,\n  \"sgst_amount\": 110.25,\n  \"total_gst\": 550.50,\n  \"total_discount\": 150.00,\n  \"invoice_total\": 1271,\n  \"item_list\": [\n        {\n            \"discount\": 100,\n        \t\"item_id\": \"5985eb29acc2a51eac48750b\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 48,\n\t\t    \"total_unit_price_to_retailer\": 960,\n\t\t    \"quantity\": 40,\n\t\t    \"item_amount\" : 50,\n\t\t    \"item_name\" : \"RSC 50\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n        },\n        {\n            \"discount\": 50,\n\t\t    \"_id\" : \"5985f16e1bd5da1e98f538e9\",\n\t\t    \"hsn_sac_code\" : \"2343dsgfsdg\",\n\t\t    \"percentage_deduction\" : 3.5,\n\t\t    \"unit_price_to_retailer\" : 99,\n\t\t    \"total_unit_price_to_retailer\": 9900,\n\t\t    \"quantity\": 10,\n\t\t    \"item_amount\" : 100,\n\t\t    \"item_name\" : \"RSC 100\",\n\t\t    \"item_type\" : \"Coupon\",\n\t\t    \"item_of\" : \"Idea\"\n\t\t}\n    ]\n}",
           "type": "json"
         },
         {
@@ -1286,7 +1300,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Example Response Format",
-          "content": "{\n    \"status\": 1,\n    \"message\": \"retailer-list-success\",\n    \"code\": 200,\n    \"totalRecords\": 7,\n    \"limitPerPage\": 100000,\n    \"page\": 1,\n    \"searchparams\": {\n        \"from\": \"dropdown\",\n        \"total_count\": 7\n    },\n    \"data\": [\n        {\n            \"_id\": \"599d94e206d0a80011ecd85d\",\n            \"name\": \"Amys\",\n            \"text\": \"Amys\",\n            \"id\": \"599d94e206d0a80011ecd85d\"\n        },\n        {\n            \"_id\": \"598566b850633c19f4920a8f\",\n            \"name\": \"Amys Agencies Updated\",\n            \"text\": \"Amys Agencies Updated\",\n            \"id\": \"598566b850633c19f4920a8f\"\n        },\n        {\n            \"_id\": \"5997c6e332c9c60011c87a00\",\n            \"name\": \"Idea\",\n            \"text\": \"Idea\",\n            \"id\": \"5997c6e332c9c60011c87a00\"\n        },\n        {\n            \"_id\": \"59947fcf6072cd00114994ea\",\n            \"name\": \"R\",\n            \"text\": \"R\",\n            \"id\": \"59947fcf6072cd00114994ea\"\n        },\n        {\n            \"_id\": \"5997e231b99a20001147a0d0\",\n            \"name\": \"Yamuna\",\n            \"text\": \"Yamuna\",\n            \"id\": \"5997e231b99a20001147a0d0\"\n        },\n        {\n            \"_id\": \"5985646df1cffd19d446e11c\",\n            \"name\": \"Yanuma Communications\",\n            \"text\": \"Yanuma Communications\",\n            \"id\": \"5985646df1cffd19d446e11c\"\n        },\n        {\n            \"_id\": \"59856a70123c7d1234363fb8\",\n            \"name\": \"Yanuma Communications Varkkala\",\n            \"text\": \"Yanuma Communications Varkkala\",\n            \"id\": \"59856a70123c7d1234363fb8\"\n        }\n    ]\n}",
+          "content": "{\n    \"status\": 1,\n    \"message\": \"retailer-list-success\",\n    \"code\": 200,\n    \"totalRecords\": 7,\n    \"limitPerPage\": 100000,\n    \"page\": 1,\n    \"searchparams\": {\n        \"from\": \"dropdown\",\n        \"total_count\": 7\n    },\n    \"data\": [\n        {\n            \"_id\": \"599d94e206d0a80011ecd85d\",\n            \"name\": \"Amys\",\n            \"text\": \"Amys\",\n            \"id\": \"599d94e206d0a80011ecd85d\"\n        },\n        {\n            \"_id\": \"598566b850633c19f4920a8f\",\n            \"name\": \"Amys Agencies Updated\",\n            \"text\": \"Amys Agencies Updated\",\n            \"id\": \"598566b850633c19f4920a8f\"\n        },\n        {\n            \"_id\": \"5997c6e332c9c60011c87a00\",\n            \"name\": \"Idea\",\n            \"text\": \"Idea\",\n            \"id\": \"5997c6e332c9c60011c87a00\"\n        },\n        {\n            \"_id\": \"59947fcf6072cd00114994ea\",\n            \"name\": \"R\",\n            \"text\": \"R\",\n            \"id\": \"59947fcf6072cd00114994ea\"\n        },\n        {\n            \"_id\": \"5997e231b99a20001147a0d0\",\n            \"name\": \"Yamuna\",\n            \"text\": \"Yamuna\",\n            \"id\": \"5997e231b99a20001147a0d0\"\n        },gi\n        {\n            \"_id\": \"5985646df1cffd19d446e11c\",\n            \"name\": \"Yanuma Communications\",\n            \"text\": \"Yanuma Communications\",\n            \"id\": \"5985646df1cffd19d446e11c\"\n        },\n        {\n            \"_id\": \"59856a70123c7d1234363fb8\",\n            \"name\": \"Yanuma Communications Varkkala\",\n            \"text\": \"Yanuma Communications Varkkala\",\n            \"id\": \"59856a70123c7d1234363fb8\"\n        }\n    ]\n}",
           "type": "json"
         }
       ]

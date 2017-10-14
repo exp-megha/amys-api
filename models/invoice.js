@@ -21,6 +21,7 @@ var InvoiceSchema = mongoose.Schema({
     total_before_tax: { type: Number, default: 0, trim: true },
     cgst_amount: { type: Number, default: 0, trim: true },
     sgst_amount: { type: Number, default: 0, trim: true },
+    total_discount: { type: Number, default: 0, trim: true },
     total_gst: { type: Number, default: 0, trim: true },
     invoice_total: { type: Number, default: 0, trim: true },
     is_active: { type: Boolean, default: true },
@@ -35,7 +36,8 @@ var InvoiceSchema = mongoose.Schema({
             unit_price_to_retailer: { type: Number, default: null },
             total_unit_price_to_retailer: { type: Number, default: null },
             percentage_deduction: { type: Number, default: null },
-            hsn_sac_code: { type: String, default: null }
+            hsn_sac_code: { type: String, default: null },
+            discount: { type: Number, default: 0 }
         }
     ],
 },
