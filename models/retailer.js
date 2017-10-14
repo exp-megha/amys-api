@@ -18,7 +18,6 @@ var RetailerSchema = mongoose.Schema({
     pan_number: { type: String, default: null, trim: true },
     gst_registration_number: { type: String, default: null, trim: true },
     place_of_supply: { type: String, default: 'KERALA', trim: true },
-    is_active: { type: Boolean, default: true },
 },
     {
         timestamps: true,

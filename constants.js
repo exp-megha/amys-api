@@ -3,9 +3,9 @@ module.exports.BASE_URL = "/http://localhost:6000";
 /* Token Expiry Date */
 module.exports.EXPIRES_IN = '70d';
 /* limit per page  for mobile*/
-module.exports.PAGE_LIMIT = 100000;
+module.exports.PAGE_LIMIT = 20;
 /* limit per page for web */
-module.exports.WEB_PAGE_LIMIT = 100000;
+module.exports.WEB_PAGE_LIMIT = 20;
 /* logo URL */
 module.exports.LOGO_URL = this.BASE_URL + "/images/logo.png";
 /* Password hash iteration count */
