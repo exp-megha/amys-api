@@ -88,6 +88,8 @@ let invoiceSearchQuery = (request, platform) => {
     if (request.is_active) {
         var is_active = (request.is_active == 'true') ? true : false;
         search_query['is_active'] = is_active;
+    } else {
+        search_query['is_active'] = true;        
     }
     return search_query;
 }

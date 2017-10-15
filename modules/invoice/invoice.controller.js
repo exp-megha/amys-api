@@ -221,7 +221,8 @@ let cancelInvoice = (req, res) => {
             if (!invoice) {
                 return Promise.reject('Item-not-found');
             }
-            return Invoice.findByIdAndUpdate({ _id: req.params.id }, { 'is_active': false }, { new: true });
+            // return Invoice.findByIdAndUpdate({ _id: req.params.id }, { 'is_active': false }, { new: true });
+            return Invoice.find({ _id: req.params.id }).remove();
         })
         .then((result) => {
             if (!result) {
