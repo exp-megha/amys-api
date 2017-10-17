@@ -66,8 +66,10 @@ var addInvoice = (req, res) => {
             req.body.retailer_place_of_supply = retaler_data.place_of_supply;
             if (req.user.platform == 'Idea') {
                 return ApplicationSetting.findOne({ settings_name: "latest_idea_invoice_id" });
-            } else {
+            } else if (req.user.platform == 'SunDirect') {
                 return ApplicationSetting.findOne({ settings_name: "latest_sundirect_invoice_id" });
+            } else {
+                return ApplicationSetting.findOne({ settings_name: "latest_amys_invoice_id" });
             }
         })
         .then((invoice_data) => {
