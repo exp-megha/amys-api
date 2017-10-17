@@ -114,8 +114,10 @@ let getRetailer = (req, res) => {
             let select_fields = {};
             if (req.query.from == 'dropdown') {
                 select_fields = { _id: 1, name: 1, text: 1, id: 1 };
+                return Retailer.find(retailer_query).select(select_fields).sort(sort_by_field);
+            } else {
+                return Retailer.find(retailer_query).select(select_fields).sort(sort_by_field).limit(limit).skip(skip);
             }
-            return Retailer.find(retailer_query).select(select_fields).sort(sort_by_field).limit(limit).skip(skip);
         })
         .then((retailers) => {
             if (!retailers) {
