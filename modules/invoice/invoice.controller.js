@@ -9,6 +9,7 @@ var ObjectId = require('mongodb').ObjectId;
 var changeCase = require('change-case');
 const moment = require('moment');
 const generator = require('generate-serial-number');
+const excelExport = require('node-excel-export');
 
 function pad(n, width, z) {
     z = z || '0';
@@ -165,6 +166,7 @@ let getInvoices = (req, res) => {
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
+    let excel_export = (req.query.export_to_excel) ? true : false;
     let query = {};
     Promise.all([]).then(() => {
         return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
@@ -176,13 +178,21 @@ let getInvoices = (req, res) => {
         })
         .then((count) => {
             req.query.total_count = count;
-            return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
+            if (excel_export == true) {
+                return Invoice.find(query).sort(sort_by_field);
+            } else {
+                return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
+            }
         })
         .then((items) => {
             if (!items) {
                 return Promise.reject('no-records-found');
             }
-            return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
+            if (excel_export == true) {
+                // exportToExcel(res);
+            } else {
+                return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
+            }
         }).catch((e) => {
             res.status(200).message(e).returnFailure(null);
         });
@@ -236,7 +246,30 @@ let cancelInvoice = (req, res) => {
         });
 }
 
+let exportToExcel = (res) => {
+    try {
+        var workbook = new Excel.Workbook();
+        var worksheet = workbook.addWorksheet('My Sheet');
 
+        worksheet.columns = [
+            { header: 'Id', key: 'id', width: 10 },
+            { header: 'Name', key: 'name', width: 32 },
+            { header: 'D.O.B.', key: 'DOB', width: 10 }
+        ];
+        worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
+        worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
+
+        var tempFilePath = tempfile('.xlsx');
+        workbook.xlsx.writeFile(path.join(__dirname, '../../../invoiceDownload/') + "report.xlsx").then(function () {
+            console.log('file is written');
+            // res.sendFile(tempFilePath, function (err) {
+            //     console.log('---------- error downloading file: ' + err);
+            // });
+        });
+    } catch (err) {
+        console.log('OOOOOOO this is the error: ' + err);
+    }
+}
 module.exports = {
     addInvoice, getInvoices, updateInvoiceDetails, getInvoiceDetails, cancelInvoice
 };

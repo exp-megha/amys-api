@@ -30,6 +30,7 @@
     "moment": "2.13.0",
     "moment-timezone": "^0.5.9",
     "mongoose": "^4.10.3",
+    "node-excel-export": "^1.4.2",
     "nodemon": "^1.11.0",
     "q": "^1.4.1",
     "random-number": "0.0.7",

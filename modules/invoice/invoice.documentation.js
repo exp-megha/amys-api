@@ -10,6 +10,7 @@
  * @apiParam {string} retailer_name this would be a '%Like%' search [search query string].
  * @apiParam {string} invoice_date moment timestamp of selected date - start of the day without time [search query string].
  * @apiParam {Boolean} is_active true / false - determines whether the invoice is cancelled or not [search query string]
+ * @apiParam {Boolean} export_to_excel true / false - determines whether the invoice has to be download as an excel sheet
  * @apiSuccessExample Example Response Format
 {
     "status": 1,
