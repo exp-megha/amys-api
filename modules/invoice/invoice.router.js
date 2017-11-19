@@ -4,7 +4,7 @@ const router = express.Router();
 
 const routes = (authenticate) => {
 	router.route("/")
-		.get(authenticate.authenticate, controller.getInvoices)
+		.get(authenticate.nonAuthenticate, controller.getInvoices)
 		.post(authenticate.authenticate, controller.addInvoice);
 
 	router.route("/:id")

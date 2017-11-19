@@ -161,44 +161,44 @@ let updateInvoiceDetails = (req, res) => {
  */
 
 let getInvoices = (req, res) => {
-    // exportToExcel(res);
-    let limit = req.query.limit || constants.PAGE_LIMIT;
-    let page = (req.query.page) ? parseInt(req.query.page) : 1;
-    let skip = page > 0 ? ((page - 1) * limit) : 0;
-    var sort_by_field = req.query.sort_by_field || "createdAt";
-    var sort_order = req.query.sort_order || "desc";
-    if (sort_order == 'desc') {
-        sort_by_field = '-' + sort_by_field;
-    }
-    let excel_export = (req.query.export_to_excel == 'true') ? true : false;
-    let query = {};
-    Promise.all([]).then(() => {
-        return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
-    })
-        .then((search_query) => {
-            query = search_query;
-            return Invoice.count(query);
-        })
-        .then((count) => {
-            req.query.total_count = count;
-            if (excel_export == true) {
-                return Invoice.find(query).sort(sort_by_field);
-            } else {
-                return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
-            }
-        })
-        .then((items) => {
-            if (!items) {
-                return Promise.reject('no-records-found');
-            }
-            if (excel_export == true) {
-                exportToExcel(res);
-            } else {
-                return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
-            }
-        }).catch((e) => {
-            res.status(200).message(e).returnFailure(null);
-        });
+    exportToExcel(res);
+    // let limit = req.query.limit || constants.PAGE_LIMIT;
+    // let page = (req.query.page) ? parseInt(req.query.page) : 1;
+    // let skip = page > 0 ? ((page - 1) * limit) : 0;
+    // var sort_by_field = req.query.sort_by_field || "createdAt";
+    // var sort_order = req.query.sort_order || "desc";
+    // if (sort_order == 'desc') {
+    //     sort_by_field = '-' + sort_by_field;
+    // }
+    // let excel_export = (req.query.export_to_excel == 'true') ? true : false;
+    // let query = {};
+    // Promise.all([]).then(() => {
+    //     return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
+    // })
+    //     .then((search_query) => {
+    //         query = search_query;
+    //         return Invoice.count(query);
+    //     })
+    //     .then((count) => {
+    //         req.query.total_count = count;
+    //         if (excel_export == true) {
+    //             return Invoice.find(query).sort(sort_by_field);
+    //         } else {
+    //             return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
+    //         }
+    //     })
+    //     .then((items) => {
+    //         if (!items) {
+    //             return Promise.reject('no-records-found');
+    //         }
+    //         if (excel_export == true) {
+    //             exportToExcel(res);
+    //         } else {
+    //             return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
+    //         }
+    //     }).catch((e) => {
+    //         res.status(200).message(e).returnFailure(null);
+    //     });
 };
 
 let getInvoiceDetails = (req, res) => {
@@ -250,37 +250,53 @@ let cancelInvoice = (req, res) => {
 }
 
 let exportToExcel = (res) => {
-    var conf = {}
+    var conf = {};
+    // conf.stylesXmlFile = "styles.xml";
+    conf.name = "mysheet";
+    console.log('innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn')
     conf.cols = [{
-        caption: 'Sl.',
-        type: 'number',
-        width: 3
-    },
-    {
-        caption: 'Job',
+        caption: 'string',
         type: 'string',
-        width: 50
-    },
-    {
-        caption: 'Date',
-        type: 'string',
-        width: 15
-    }
+        beforeCellWrite: function (row, cellData) {
+            return cellData.toUpperCase();
+        },
+        width: 28.7109375
+    }, {
+        caption: 'date',
+        type: 'date',
+        beforeCellWrite: function () {
+            var originDate = new Date(Date.UTC(1899, 11, 30));
+            return function (row, cellData, eOpt) {
+                if (eOpt.rowNum % 2) {
+                    eOpt.styleIndex = 1;
+                }
+                else {
+                    eOpt.styleIndex = 2;
+                }
+                if (cellData === null) {
+                    eOpt.cellType = 'string';
+                    return 'N/A';
+                } else
+                    return (cellData - originDate) / (24 * 60 * 60 * 1000);
+            }
+        }()
+    }, {
+        caption: 'bool',
+        type: 'bool'
+    }, {
+        caption: 'number',
+        type: 'number'
+    }];
+    conf.rows = [
+        ['pi', new Date(Date.UTC(2013, 4, 1)), true, 3.14],
+        ["e", new Date(2012, 4, 1), false, 2.7182],
+        ["M&M<>'", new Date(Date.UTC(2013, 6, 9)), false, 1.61803],
+        ["null date", null, true, 1.414]
     ];
-    arr = [];
-    var rows = [
-        {job: 'test 1', name: 'megha 1'},
-        {job: 'test 2', name: 'megha 2'},
-        {job: 'test 3', name: 'megha 3'}        
-    ]
-    for (i = 0; i < rows.length; i++) {
-        a = [i + 1, rows[i].job, rows[i].name];
-        arr.push(a);
-    }
-    conf.rows = arr;
+    console.log('-------------------------', conf)
     var result = nodeExcel.execute(conf);
-    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-    res.setHeader("Content-Disposition", "attachment;filename=" + "todo.xlsx");
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+    res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
     res.end(result, 'binary');
 }
 module.exports = {

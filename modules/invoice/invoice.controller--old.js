@@ -12,7 +12,6 @@ const generator = require('generate-serial-number');
 const excelExport = require('node-excel-export');
 const Excel = require('exceljs');
 var path = require("path");
-var nodeExcel = require('excel-export');
 
 function pad(n, width, z) {
     z = z || '0';
@@ -161,44 +160,44 @@ let updateInvoiceDetails = (req, res) => {
  */
 
 let getInvoices = (req, res) => {
-    // exportToExcel(res);
-    let limit = req.query.limit || constants.PAGE_LIMIT;
-    let page = (req.query.page) ? parseInt(req.query.page) : 1;
-    let skip = page > 0 ? ((page - 1) * limit) : 0;
-    var sort_by_field = req.query.sort_by_field || "createdAt";
-    var sort_order = req.query.sort_order || "desc";
-    if (sort_order == 'desc') {
-        sort_by_field = '-' + sort_by_field;
-    }
-    let excel_export = (req.query.export_to_excel == 'true') ? true : false;
-    let query = {};
-    Promise.all([]).then(() => {
-        return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
-    })
-        .then((search_query) => {
-            query = search_query;
-            return Invoice.count(query);
-        })
-        .then((count) => {
-            req.query.total_count = count;
-            if (excel_export == true) {
-                return Invoice.find(query).sort(sort_by_field);
-            } else {
-                return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
-            }
-        })
-        .then((items) => {
-            if (!items) {
-                return Promise.reject('no-records-found');
-            }
-            if (excel_export == true) {
-                exportToExcel(res);
-            } else {
-                return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
-            }
-        }).catch((e) => {
-            res.status(200).message(e).returnFailure(null);
-        });
+    exportToExcel(res);
+    // let limit = req.query.limit || constants.PAGE_LIMIT;
+    // let page = (req.query.page) ? parseInt(req.query.page) : 1;
+    // let skip = page > 0 ? ((page - 1) * limit) : 0;
+    // var sort_by_field = req.query.sort_by_field || "createdAt";
+    // var sort_order = req.query.sort_order || "desc";
+    // if (sort_order == 'desc') {
+    //     sort_by_field = '-' + sort_by_field;
+    // }
+    // let excel_export = (req.query.export_to_excel == 'true') ? true : false;
+    // let query = {};
+    // Promise.all([]).then(() => {
+    //     return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
+    // })
+    //     .then((search_query) => {
+    //         query = search_query;
+    //         return Invoice.count(query);
+    //     })
+    //     .then((count) => {
+    //         req.query.total_count = count;
+    //         if (excel_export == true) {
+    //             return Invoice.find(query).sort(sort_by_field);
+    //         } else {
+    //             return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
+    //         }
+    //     })
+    //     .then((items) => {
+    //         if (!items) {
+    //             return Promise.reject('no-records-found');
+    //         }
+    //         if (excel_export == true) {
+    //             exportToExcel(res);
+    //         } else {
+    //             return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
+    //         }
+    //     }).catch((e) => {
+    //         res.status(200).message(e).returnFailure(null);
+    //     });
 };
 
 let getInvoiceDetails = (req, res) => {
@@ -250,38 +249,61 @@ let cancelInvoice = (req, res) => {
 }
 
 let exportToExcel = (res) => {
-    var conf = {}
-    conf.cols = [{
-        caption: 'Sl.',
-        type: 'number',
-        width: 3
-    },
-    {
-        caption: 'Job',
-        type: 'string',
-        width: 50
-    },
-    {
-        caption: 'Date',
-        type: 'string',
-        width: 15
-    }
+    var cell_name = '';
+    var i = 0;
+    var filepath = constants.EXCEL_TEMPLATE_PATH_WEB;
+    var filename = '';
+    // create workbook by api.
+    var workbook = new Excel.Workbook();
+
+    // must create one more sheet.
+    var sheet = workbook.addWorksheet("Invoice");
+    // CampaignSubProfile.findOne({ _id: sub_profile_id }).select('sub_profile_name band_details').exec(function (err, band_info) {
+    sheet.columns = [
+        { header: 'Invoice No:', key: 'email', width: 40 },
+        { header: 'Invoice Date', key: 'band', width: 40 },
+        { header: 'GST No:', key: 'sub_profile_name', width: 30 },
+        { header: 'Amount', key: 'notes', width: 45 },
+        { header: 'Total', key: 'sub_profile_id', width: 40 }
     ];
-    arr = [];
-    var rows = [
-        {job: 'test 1', name: 'megha 1'},
-        {job: 'test 2', name: 'megha 2'},
-        {job: 'test 3', name: 'megha 3'}        
-    ]
-    for (i = 0; i < rows.length; i++) {
-        a = [i + 1, rows[i].job, rows[i].name];
-        arr.push(a);
-    }
-    conf.rows = arr;
-    var result = nodeExcel.execute(conf);
-    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-    res.setHeader("Content-Disposition", "attachment;filename=" + "todo.xlsx");
-    res.end(result, 'binary');
+    sheet.getCell('A1').alignment = { vertical: 'middle', horizontal: 'center' };
+    sheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
+    sheet.getCell('A1').font = { bold: true };
+    sheet.getCell('B1').font = { bold: true };
+    var sub_profile_id_col = sheet.getColumn(5);
+    sheet.views = [
+        { state: 'frozen', xSplit: 5, ySplit: 1, activeCell: 'A2', zoomScale: 92 }
+    ];
+
+    // band_info.band_details.forEach(function (band) {
+    //     band_name = band_name + band.band_name + ",";
+    // });
+    // band_name = band_name.substring(0, band_name.length - 1);
+    // band_name = band_name + "\"";
+    // for (i = 2; i <= 1000; i++) {
+    //     cell_name = 'B' + i;
+    //     sheet.getCell(cell_name).dataValidation = {
+    //         type: 'list',
+    //         allowBlank: false,
+    //         formulae: [band_name]
+    //     };
+    // }
+    // you can create xlsx file now.
+    filename = filepath + "/templatePath/PersonBulkUploadForm" + ".xlsx";
+    console.log('############', filepath, '*********', filename);
+    var newPath = path.join(__dirname, '../templatePath/') + "PersonBulkUploadForm" + ".xlsx";
+    // workbook.xlsx.writeFile(__dirname + "PersonBulkUploadForm" + ".xlsx")
+    workbook.xlsx.writeFile(path.join(__dirname, '../../templatePath/') + "PersonBulkUploadForm" + ".xlsx")
+        .then(function (response) {
+
+            console.log("xls file is written......", response);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+            res.setHeader("Content-Disposition", "attachment;filename=" + newPath);
+            // res.end(result, 'binary');
+            // return res.status(200).message('Invoice--success').returnSuccess(newPath);
+            // return cb(null, success('successs', 200, filename))
+        });
+    // });
 }
 module.exports = {
     addInvoice, getInvoices, updateInvoiceDetails, getInvoiceDetails, cancelInvoice

@@ -11,8 +11,6 @@ const moment = require('moment');
 const generator = require('generate-serial-number');
 const excelExport = require('node-excel-export');
 const Excel = require('exceljs');
-var path = require("path");
-var nodeExcel = require('excel-export');
 
 function pad(n, width, z) {
     z = z || '0';
@@ -161,7 +159,6 @@ let updateInvoiceDetails = (req, res) => {
  */
 
 let getInvoices = (req, res) => {
-    // exportToExcel(res);
     let limit = req.query.limit || constants.PAGE_LIMIT;
     let page = (req.query.page) ? parseInt(req.query.page) : 1;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
@@ -170,12 +167,13 @@ let getInvoices = (req, res) => {
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
-    let excel_export = (req.query.export_to_excel == 'true') ? true : false;
+    let excel_export = (req.query.export_to_excel) ? true : false;
     let query = {};
     Promise.all([]).then(() => {
         return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
     })
         .then((search_query) => {
+            console.log(search_query);
             query = search_query;
             return Invoice.count(query);
         })
@@ -250,38 +248,28 @@ let cancelInvoice = (req, res) => {
 }
 
 let exportToExcel = (res) => {
-    var conf = {}
-    conf.cols = [{
-        caption: 'Sl.',
-        type: 'number',
-        width: 3
-    },
-    {
-        caption: 'Job',
-        type: 'string',
-        width: 50
-    },
-    {
-        caption: 'Date',
-        type: 'string',
-        width: 15
+    try {
+        var workbook = new Excel.Workbook();
+        var worksheet = workbook.addWorksheet('My Sheet');
+
+        worksheet.columns = [
+            { header: 'Id', key: 'id', width: 10 },
+            { header: 'Name', key: 'name', width: 32 },
+            { header: 'D.O.B.', key: 'DOB', width: 10 }
+        ];
+        worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
+        worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
+
+        var tempFilePath = tempfile('.xlsx');
+        workbook.xlsx.writeFile(path.join(__dirname, '../../../invoiceDownload/') + "report.xlsx").then(function () {
+            console.log('file is written');
+            // res.sendFile(tempFilePath, function (err) {
+            //     console.log('---------- error downloading file: ' + err);
+            // });
+        });
+    } catch (err) {
+        console.log('OOOOOOO this is the error: ' + err);
     }
-    ];
-    arr = [];
-    var rows = [
-        {job: 'test 1', name: 'megha 1'},
-        {job: 'test 2', name: 'megha 2'},
-        {job: 'test 3', name: 'megha 3'}        
-    ]
-    for (i = 0; i < rows.length; i++) {
-        a = [i + 1, rows[i].job, rows[i].name];
-        arr.push(a);
-    }
-    conf.rows = arr;
-    var result = nodeExcel.execute(conf);
-    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-    res.setHeader("Content-Disposition", "attachment;filename=" + "todo.xlsx");
-    res.end(result, 'binary');
 }
 module.exports = {
     addInvoice, getInvoices, updateInvoiceDetails, getInvoiceDetails, cancelInvoice

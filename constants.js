@@ -1,5 +1,5 @@
 /* default host User Type */
-module.exports.BASE_URL = "/http://localhost:6000";
+module.exports.BASE_URL = "http://localhost:4000";
 /* Token Expiry Date */
 module.exports.EXPIRES_IN = '70d';
 /* limit per page  for mobile*/
@@ -15,4 +15,7 @@ module.exports.INVOICE_ID_PREFIX = "INV";
 /* PAN_NUMBER */
 module.exports.PAN_NUMBER = "BSWPS5772G";
 /* GST_REGISTRATION_NUMBER */
-module.exports.GST_REGISTRATION_NUMBER = "32BSWPS5772G1Z1";;
+module.exports.GST_REGISTRATION_NUMBER = "32BSWPS5772G1Z1";
+/* EXCEL TEMPLATE PATH */
+module.exports.EXCEL_TEMPLATE_PATH_WEB = this.BASE_URL;
+

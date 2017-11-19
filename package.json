@@ -20,6 +20,8 @@
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.16.0",
     "change-case": "^3.0.1",
+    "excel-export": "^0.5.1",
+    "exceljs": "^0.6.2",
     "express": "^4.14.0",
     "fs": "0.0.2",
     "generate-serial-number": "0.0.3",
