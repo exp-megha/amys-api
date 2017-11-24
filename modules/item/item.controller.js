@@ -3,7 +3,6 @@ var { Item } = require('./../../models/item');
 var { ApplicationSetting } = require('./../../models/applicationsetting');
 var searchAndFilters = require('./../../utils/searchAndFilters');
 var constants = require('./../../constants');
-var ObjectId = require('mongodb').ObjectId;
 var changeCase = require('change-case');
 
 /**

@@ -4,7 +4,6 @@ var { ApplicationSetting } = require('./../../models/applicationsetting');
 var { User } = require('./../../models/user');
 var searchAndFilters = require('./../../utils/searchAndFilters');
 var constants = require('./../../constants');
-var ObjectId = require('mongodb').ObjectId;
 var changeCase = require('change-case');
 var async = require('async');
 /**

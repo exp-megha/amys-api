@@ -5,7 +5,6 @@ var { Retailer } = require('./../../models/retailer');
 var { ApplicationSetting } = require('./../../models/applicationsetting');
 var searchAndFilters = require('./../../utils/searchAndFilters');
 var constants = require('./../../constants');
-var ObjectId = require('mongodb').ObjectId;
 var changeCase = require('change-case');
 const moment = require('moment');
 const generator = require('generate-serial-number');
