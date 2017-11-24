@@ -71,10 +71,10 @@ let invoiceSearchQuery = (request, platform) => {
         search_query["retailer_id"] = new RegExp('^.*' + request.retailer_id + '.*$', "i")
     }
     if (request.month) {
-        search_query["month"] = request.month;
+        search_query["month"] = Number(request.month);
     }
     if (request.year) {
-        search_query["year"] = request.year;
+        search_query["year"] = Number(request.year);
     }
     if (request.invoice_number) {
         search_query["invoice_number"] = new RegExp('^.*' + request.invoice_number + '.*$', "i");

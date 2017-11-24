@@ -11,8 +11,6 @@ const moment = require('moment');
 const generator = require('generate-serial-number');
 const excelExport = require('node-excel-export');
 const Excel = require('exceljs');
-var path = require("path");
-var nodeExcel = require('excel-export');
 
 function pad(n, width, z) {
     z = z || '0';
@@ -161,52 +159,38 @@ let updateInvoiceDetails = (req, res) => {
  */
 
 let getInvoices = (req, res) => {
-    // exportToExcel(res);
-    var title = '';
     let limit = req.query.limit || constants.PAGE_LIMIT;
     let page = (req.query.page) ? parseInt(req.query.page) : 1;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
-    var sort_by_field = (req.query.sort_by_field) ? req.query.sort_by_field : "createdAt";
-    var sort_order = (req.query.sort_order) ? req.query.sort_order : "desc";
+    var sort_by_field = req.query.sort_by_field || "createdAt";
+    var sort_order = req.query.sort_order || "desc";
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
-    let excel_export = (req.query.export_to_excel == 'true') ? true : false;
+    let excel_export = (req.query.export_to_excel) ? true : false;
     let query = {};
-    var platform = (req.user) ? req.user.platform : req.query.platform;
-    console.log('=====', platform, req.user)
-    var sheet_name = platform + ' Invoice-';
     Promise.all([]).then(() => {
-        return searchAndFilters.invoiceSearchQuery(req.query, platform);
+        return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
     })
         .then((search_query) => {
+            console.log(search_query);
             query = search_query;
             return Invoice.count(query);
         })
         .then((count) => {
             req.query.total_count = count;
             if (excel_export == true) {
-                return Promise.all([
-                    Invoice.find(query).sort("createdAt")
-                    // Invoice.find(query).distinct('retailer_id').count()
-                ]);
+                return Invoice.find(query).sort(sort_by_field);
             } else {
-                return Promise.all([
-                    Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip)
-                    // Invoice.find(query).distinct('retailer_id').count()
-                ]);
+                return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
             }
         })
-        .then((result) => {
-            var items = result[0];
-            // var retailer_count = result[1];
+        .then((items) => {
             if (!items) {
                 return Promise.reject('no-records-found');
             }
             if (excel_export == true) {
-                title = platform + ' Invoice for the month of ' + moment(req.query.month, 'MM').format('MMMM') + ' ' + req.query.year;
-                sheet_name = sheet_name + moment(req.query.month, 'MM').format('MMMM') + '-' + req.query.year
-                exportToExcel(res, items, title, sheet_name);
+                exportToExcel(res);
             } else {
                 return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
             }
@@ -263,148 +247,29 @@ let cancelInvoice = (req, res) => {
         });
 }
 
-let exportToExcel = (res, items, title, sheet_name) => {
-    const styles = {
-        headerDark: {
-            fill: {
-                fgColor: {
-                    rgb: 'F2FBA7'
-                }
-            },
-            font: {
-                color: {
-                    rgb: '000000'
-                },
-                sz: 14,
-                bold: true,
-                underline: false
-            },
-            alignment: {
-                horizontal: "center"
-            },
-            border: {
-                right: { style: 'thick', color: '000000' }
-            }
-        },
-        cellPink: {
-            fill: {
-                fgColor: {
-                    rgb: 'ECF4FE'
-                }
-            },
-            font: {
-                color: {
-                    rgb: '000000'
-                },
-                sz: 12,
-                bold: true,
-                underline: false
-            },
-            alignment: {
-                horizontal: "center"
-            },
-            border: {
-                top: { style: 'thin', color: '000000' },
-                bottom: { style: 'thin', color: '000000' },
-                right: { style: 'thin', color: '000000' }
-            }
-        }
-    };
+let exportToExcel = (res) => {
+    try {
+        var workbook = new Excel.Workbook();
+        var worksheet = workbook.addWorksheet('My Sheet');
 
-    //Array of objects representing heading rows (very top) 
-    const heading = [
-        [{ value: title, style: styles.headerDark }, { value: 'b1', style: styles.headerDark }, { value: 'c1', style: styles.headerDark }],
-        // ['a2', 'b2', 'c2'] // <-- It can be only values 
-    ];
-    const specification = {
-        inv_number: { // <- the key should match the actual data key 
-            displayName: 'Invoice Number', // <- Here you specify the column header 
-            headerStyle: styles.cellPink, // <- Header style 
-            width: 100 // <- width in pixels 
-        },
-        inv_date: {
-            displayName: 'Invoice Date',
-            headerStyle: styles.cellPink,
-            width: 100 // <- width in chars (when the number is passed as string) 
-        },
-        retailer: {
-            displayName: 'Retailer',
-            headerStyle: styles.cellPink,
-            width: 250 // <- width in pixels 
-        },
-        gst_no: {
-            displayName: 'Retailer GST No:',
-            headerStyle: styles.cellPink,
-            width: 120 // <- width in pixels  
-        },
-        pan_no: {
-            displayName: 'Retailer PAN Card',
-            headerStyle: styles.cellPink,
-            width: 120 // <- width in pixels  
-        },
-        total_before_tax: {
-            displayName: 'Total Before Tax',
-            headerStyle: styles.cellPink,
-            width: 120 // <- width in pixels  
-        },
-        gst_total: {
-            displayName: 'Total GST',
-            headerStyle: styles.cellPink,
-            width: 80 // <- width in pixels  
-        },
-        discount: {
-            displayName: 'Discount',
-            headerStyle: styles.cellPink,
-            width: 80 // <- width in pixels  
-        },
-        inv_total: {
-            displayName: 'Invoice Total',
-            headerStyle: styles.cellPink,
-            width: 120 // <- width in pixels  Retailer PAN Card
-        }
-    }
-    var total_amount = 0;
-    var dataset = [];
-    for (i = 0; i < items.length; i++) {
-        a = {
-            inv_number: items[i].invoice_number,
-            inv_date: moment(parseInt(items[i].invoice_date)).format("DD MMM, YYYY"),
-            retailer: items[i].retailer_name,
-            gst_no: items[i].retailer_gst_registration_number,
-            pan_no: items[i].retailer_pan_number,
-            total_before_tax: parseFloat(items[i].total_before_tax),
-            gst_total: parseFloat(items[i].total_gst),
-            discount: parseFloat(items[i].total_discount),
-            inv_total: parseFloat(items[i].invoice_total)
-        }
-        total_amount = total_amount + parseFloat(items[i].invoice_total);
-        dataset.push(a);
-    }
-    console.log('**********************', dataset)
-    dataset.push({}, {
-        inv_number: '', inv_date: '', retailer: '', gst_no: '', pan_no: '', total_before_tax: '', gst_total: '', discount: '',
-        inv_total: total_amount, style: styles.headerDark
-    });
-    const merges = [
-        { start: { row: 1, column: 1 }, end: { row: 1, column: 9 } },
-        // { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
-        // { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
-    ]
-    const report = excelExport.buildExport(
-        [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report 
-            {
-                name: sheet_name, // <- Specify sheet name (optional) 
-                heading: heading, // <- Raw heading array (optional) 
-                merges: merges, // <- Merge cell ranges 
-                specification: specification, // <- Report specification 
-                data: dataset // <-- Report data 
-            }
-        ]
-    );
+        worksheet.columns = [
+            { header: 'Id', key: 'id', width: 10 },
+            { header: 'Name', key: 'name', width: 32 },
+            { header: 'D.O.B.', key: 'DOB', width: 10 }
+        ];
+        worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
+        worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-    res.setHeader("Content-Disposition", "attachment;filename=" + sheet_name + ".xlsx");
-    res.end(report, 'binary');
+        var tempFilePath = tempfile('.xlsx');
+        workbook.xlsx.writeFile(path.join(__dirname, '../../../invoiceDownload/') + "report.xlsx").then(function () {
+            console.log('file is written');
+            // res.sendFile(tempFilePath, function (err) {
+            //     console.log('---------- error downloading file: ' + err);
+            // });
+        });
+    } catch (err) {
+        console.log('OOOOOOO this is the error: ' + err);
+    }
 }
 module.exports = {
     addInvoice, getInvoices, updateInvoiceDetails, getInvoiceDetails, cancelInvoice

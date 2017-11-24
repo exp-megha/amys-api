@@ -11,6 +11,8 @@ const moment = require('moment');
 const generator = require('generate-serial-number');
 const excelExport = require('node-excel-export');
 const Excel = require('exceljs');
+var path = require("path");
+var nodeExcel = require('excel-export');
 
 function pad(n, width, z) {
     z = z || '0';
@@ -159,38 +161,51 @@ let updateInvoiceDetails = (req, res) => {
  */
 
 let getInvoices = (req, res) => {
+    // exportToExcel(res);
+    var title = '';
+    var sheet_name = 'Invoice-';
     let limit = req.query.limit || constants.PAGE_LIMIT;
     let page = (req.query.page) ? parseInt(req.query.page) : 1;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
-    var sort_by_field = req.query.sort_by_field || "createdAt";
-    var sort_order = req.query.sort_order || "desc";
+    var sort_by_field = (req.query.sort_by_field) ? req.query.sort_by_field : "createdAt";
+    var sort_order = (req.query.sort_order) ? req.query.sort_order : "desc";
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
     }
-    let excel_export = (req.query.export_to_excel) ? true : false;
+    let excel_export = (req.query.export_to_excel == 'true') ? true : false;
     let query = {};
+    var platform = (req.user) ? req.user.platform : 'Amys';
     Promise.all([]).then(() => {
-        return searchAndFilters.invoiceSearchQuery(req.query, req.user.platform);
+        return searchAndFilters.invoiceSearchQuery(req.query, platform);
     })
         .then((search_query) => {
-            console.log(search_query);
             query = search_query;
             return Invoice.count(query);
         })
         .then((count) => {
             req.query.total_count = count;
             if (excel_export == true) {
-                return Invoice.find(query).sort(sort_by_field);
+                return Promise.all([
+                    Invoice.find(query).sort("createdAt")
+                    // Invoice.find(query).distinct('retailer_id').count()
+                ]);
             } else {
-                return Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip);
+                return Promise.all([
+                    Invoice.find(query).sort(sort_by_field).limit(limit).skip(skip)
+                    // Invoice.find(query).distinct('retailer_id').count()
+                ]);
             }
         })
-        .then((items) => {
+        .then((result) => {
+            var items = result[0];
+            // var retailer_count = result[1];
             if (!items) {
                 return Promise.reject('no-records-found');
             }
             if (excel_export == true) {
-                exportToExcel(res);
+                title = 'Invoice for the month of ' + moment(req.query.month, 'MM').format('MMMM') + ' ' + req.query.year;
+                sheet_name = sheet_name + moment(req.query.month, 'MM').format('MMMM') + '-' + req.query.year
+                exportToExcel(res, items, title, sheet_name);
             } else {
                 return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
             }
@@ -247,29 +262,76 @@ let cancelInvoice = (req, res) => {
         });
 }
 
-let exportToExcel = (res) => {
-    try {
-        var workbook = new Excel.Workbook();
-        var worksheet = workbook.addWorksheet('My Sheet');
+let exportToExcel = (res, items, title, sheet_name) => {
+    // console.log('===================', items);
+    var conf = {}
+    conf.name = sheet_name;
+    arr = [];
+    conf.cols = [{
+        caption: 'Invoice Number',
+        type: 'string',
+        width: 200
+    },
+    {
+        caption: 'Invoice date',
+        type: 'string', //invNo
+        width: 200
+    },
+    {
+        caption: 'Retailer',
+        type: 'string', //invDate
+        width: 5200
+    },
+    {
+        caption: 'Retailer GST No:',
+        type: 'string', //invValue
+        width: 200
+    },
+    {
+        caption: 'Retailer PAN Card',
+        type: 'string', //placeSupply
+        width: 200
+    },
+    {
+        caption: 'Total GST',
+        type: 'number', //reverseCHarge
+        width: 100
+    },
+    {
+        caption: 'Invoice Total',
+        type: 'number', //reverseCHarge
+        width: 100
+    }];
 
-        worksheet.columns = [
-            { header: 'Id', key: 'id', width: 10 },
-            { header: 'Name', key: 'name', width: 32 },
-            { header: 'D.O.B.', key: 'DOB', width: 10 }
+    var total_amount = 0;
+    for (i = 0; i < items.length; i++) {
+        a = [
+            items[i].invoice_number,
+            moment(parseInt(items[i].invoice_date)).format("DD MMM, YYYY"),
+            items[i].retailer_name,
+            items[i].retailer_gst_registration_number,
+            items[i].retailer_pan_number,
+            parseFloat(items[i].total_gst),
+            parseFloat(items[i].invoice_total)
         ];
-        worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-        worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
-
-        var tempFilePath = tempfile('.xlsx');
-        workbook.xlsx.writeFile(path.join(__dirname, '../../../invoiceDownload/') + "report.xlsx").then(function () {
-            console.log('file is written');
-            // res.sendFile(tempFilePath, function (err) {
-            //     console.log('---------- error downloading file: ' + err);
-            // });
-        });
-    } catch (err) {
-        console.log('OOOOOOO this is the error: ' + err);
+        total_amount = total_amount + parseFloat(items[i].invoice_total);
+        arr.push(a);
     }
+    arr.push([
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        total_amount
+    ])
+    conf.rows = arr;
+    console.log('aaaaaaaaaaaaa', arr);
+    var result = nodeExcel.execute(conf);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+    res.setHeader("Content-Disposition", "attachment;filename=" + sheet_name + ".xlsx");
+    res.end(result, 'binary');
 }
 module.exports = {
     addInvoice, getInvoices, updateInvoiceDetails, getInvoiceDetails, cancelInvoice

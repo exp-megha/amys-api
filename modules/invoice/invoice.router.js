@@ -3,8 +3,11 @@ const controller = require('./invoice.controller');
 const router = express.Router();
 
 const routes = (authenticate) => {
-	router.route("/")
+	router.route("/export")
 		.get(authenticate.nonAuthenticate, controller.getInvoices)
+
+	router.route("/")
+		.get(authenticate.authenticate, controller.getInvoices)
 		.post(authenticate.authenticate, controller.addInvoice);
 
 	router.route("/:id")
