@@ -1,6 +1,5 @@
 var moment = require('moment');
 var constants = require('../constants');
-var ObjectId = require('mongodb').ObjectId;
 
 var retailerSearchQuery = (req, reqQuery, platform) => {
     let filter_query = {"platform": platform};
