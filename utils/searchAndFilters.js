@@ -1,5 +1,6 @@
 var moment = require('moment');
 var constants = require('../constants');
+var ObjectId = require('mongodb').ObjectId;
 
 var retailerSearchQuery = (req, reqQuery, platform) => {
     let filter_query = {"platform": platform};
@@ -67,7 +68,7 @@ let invoiceSearchQuery = (request, platform) => {
     let search_query = {"platform": platform};
     // let search_query = {};
     if (request.retailer_id) {
-        search_query["retailer_id"] = new RegExp('^.*' + request.retailer_id + '.*$', "i")
+        search_query["retailer_id"] = ObjectId(request.retailer_id);
     }
     if (request.month) {
         search_query["month"] = Number(request.month);

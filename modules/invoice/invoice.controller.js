@@ -92,12 +92,12 @@ var addInvoice = (req, res) => {
             req.body.invoice_number = invoice_id;
             req.body.month = Number(moment(parseInt(req.body.invoice_date)).format('M'));
             req.body.year = Number(moment(parseInt(req.body.invoice_date)).format('YYYY'));
-            Invoice.create(req.body, (err, data) => {
-                if (err) {
-                    return Promise.reject('failed-to-add-invoice');
-                }
-                return res.status(200).message('invoice-added-successfully').returnSuccess(data);
-            })
+            // Invoice.create(req.body, (err, data) => {
+            //     if (err) {
+            //         return Promise.reject('failed-to-add-invoice');
+            //     }
+            //     return res.status(200).message('invoice-added-successfully').returnSuccess(data);
+            // })
         }).catch((e) => res.status(400).message(e).returnFailure(null));
 }
 
