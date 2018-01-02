@@ -141,6 +141,18 @@ var activateInactivate = (req, res) => {
     });
 }
 
+var getItemOf = (req, res) => {
+    var listArray = [];        
+    if (req.user.platform == 'Amys') {
+        listArray = ["Idea", "Vodafone", "Airtel", "Bsnl", "Docomo", "Flexi", "Sim", "Jio Fi", "Jio", ];
+    } else if (req.user.platform == 'Idea') {
+        listArray = ["Idea"];
+    } if (req.user.platform == 'SunDirect') {
+        listArray = ["Sundirct", "Sun Direct"];       
+    }
+    return res.status(200).message('retailer-list-success').returnListSuccess(listArray, req.query);
+}
+
 module.exports = {
-    addItem, updateItem, getItem, getItemDetails, activateInactivate
+    addItem, updateItem, getItem, getItemDetails, activateInactivate, getItemOf
 };

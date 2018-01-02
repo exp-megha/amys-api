@@ -92,12 +92,12 @@ var addInvoice = (req, res) => {
             req.body.invoice_number = invoice_id;
             req.body.month = Number(moment(parseInt(req.body.invoice_date)).format('M'));
             req.body.year = Number(moment(parseInt(req.body.invoice_date)).format('YYYY'));
-            // Invoice.create(req.body, (err, data) => {
-            //     if (err) {
-            //         return Promise.reject('failed-to-add-invoice');
-            //     }
-            //     return res.status(200).message('invoice-added-successfully').returnSuccess(data);
-            // })
+            Invoice.create(req.body, (err, data) => {
+                if (err) {
+                    return Promise.reject('failed-to-add-invoice');
+                }
+                return res.status(200).message('invoice-added-successfully').returnSuccess(data);
+            })
         }).catch((e) => res.status(400).message(e).returnFailure(null));
 }
 
@@ -173,7 +173,7 @@ let getInvoices = (req, res) => {
     let excel_export = (req.query.export_to_excel == 'true') ? true : false;
     let query = {};
     var platform = (req.user) ? req.user.platform : req.query.platform;
-    console.log('=====', platform, req.user)
+    console.log('=====', platform, req.user, sort_by_field)
     var sheet_name = platform + ' Invoice-';
     Promise.all([]).then(() => {
         return searchAndFilters.invoiceSearchQuery(req.query, platform);
@@ -210,7 +210,8 @@ let getInvoices = (req, res) => {
                 return res.status(200).message('invoice-list-success').returnListSuccess(items, req.query);
             }
         }).catch((e) => {
-            res.status(200).message(e).returnFailure(null);
+            var result = [];
+            res.status(200).message(e).returnFailure(result);
         });
 };
 
@@ -401,9 +402,12 @@ let exportToExcel = (res, items, title, sheet_name) => {
         ]
     );
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-    res.setHeader("Content-Disposition", "attachment;filename=" + sheet_name + ".xlsx");
-    res.end(report, 'binary');
+    res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers) 
+    res.send(report);
+
+    // res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+    // res.setHeader("Content-Disposition", "attachment;filename=" + sheet_name + ".xlsx");
+    // res.end(report, 'binary');
 }
 module.exports = {
     addInvoice, getInvoices, updateInvoiceDetails, getInvoiceDetails, cancelInvoice

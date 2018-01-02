@@ -3,6 +3,9 @@ const controller = require('./item.controller');
 const router = express.Router();
 
 const routes = (authenticate) => {
+	router.route("/itemOf")
+	.get(authenticate.authenticate, controller.getItemOf)
+	
 	router.route("/")
 		.get(authenticate.authenticate, controller.getItem)
 		.post(authenticate.authenticate, controller.addItem);
