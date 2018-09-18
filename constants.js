@@ -18,4 +18,6 @@ module.exports.PAN_NUMBER = "BSWPS5772G";
 module.exports.GST_REGISTRATION_NUMBER = "32BSWPS5772G1Z1";
 /* EXCEL TEMPLATE PATH */
 module.exports.EXCEL_TEMPLATE_PATH_WEB = this.BASE_URL;
+/* GST Split Perenatge */
+module.exports.GST_SPLIT_PERCENTAGE = 0.06;
 

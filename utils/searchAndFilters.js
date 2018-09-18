@@ -93,7 +93,42 @@ let invoiceSearchQuery = (request, platform) => {
     }
     return search_query;
 }
+let mobileInvoiceSearchQuery = (request, platform) => {
+    let search_query = {"platform": platform};
+    // let search_query = {};
+    if (request.retailer_id) {
+        search_query["retailer_id"] = ObjectId(request.retailer_id);
+    }
+    if (request.month) {
+        search_query["month"] = Number(request.month);
+    }
+    if (request.year) {
+        search_query["year"] = Number(request.year);
+    }
+    if (request.invoice_number) {
+        search_query["invoice_number"] = new RegExp('^.*' + request.invoice_number + '.*$', "i");
+    }
+    if (request.customer_name) {
+        search_query["customer_name"] = new RegExp('^.*' + request.customer_name + '.*$', "i");
+    }
+    if (request.customer_address) {
+        search_query["customer_address"] = new RegExp('^.*' + request.customer_address + '.*$', "i");
+    }
+    if (request.item_name) {
+        search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i"); 
+    }
+    if (request.invoice_date) {
+        search_query["invoice_date"] = request.invoice_date;
+    }
+    if (request.is_active) {
+        var is_active = (request.is_active == 'true') ? true : false;
+        search_query['is_active'] = is_active;
+    } else {
+        search_query['is_active'] = true;        
+    }
+    return search_query;
+}
 
 module.exports = {
-    retailerSearchQuery, itemSearchQuery, invoiceSearchQuery
+    retailerSearchQuery, itemSearchQuery, invoiceSearchQuery, mobileInvoiceSearchQuery
 }

@@ -4,7 +4,10 @@ const dependencies = [
     'retailer',
     'item',
     'invoice',
-    'users'
+    'users',
+    'mobileInvoice'
 ];
 
-module.exports = { dependencies };
+module.exports = {
+    dependencies
+};
