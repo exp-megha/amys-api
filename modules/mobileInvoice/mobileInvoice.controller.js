@@ -51,9 +51,9 @@ var addMobileInvoice = (req, res) => {
     var invoice_id = constants.INVOICE_ID_PREFIX + "1"; // + checksum;
 
     let invoice_total = req.body.invoice_total;
-    let total_before_tax = (total_amount / 112) * 100;
-    let cgst_amount = actual_price * constants.GST_SPLIT_PERCENTAGE;
-    let sgst_amount = actual_price * constants.GST_SPLIT_PERCENTAGE;
+    let total_before_tax = (invoice_total / 112) * 100;
+    let cgst_amount = total_before_tax * constants.GST_SPLIT_PERCENTAGE;
+    let sgst_amount = total_before_tax * constants.GST_SPLIT_PERCENTAGE;
     let total_discount = req.body.total_discount;
     let total_gst = cgst_amount + sgst_amount;
     let invoice_object = {
