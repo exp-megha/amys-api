@@ -94,7 +94,7 @@ let invoiceSearchQuery = (request, platform) => {
     return search_query;
 }
 let mobileInvoiceSearchQuery = (request, platform) => {
-    let search_query = {"platform": platform};
+    let search_query = {};
     // let search_query = {};
     if (request.retailer_id) {
         search_query["retailer_id"] = ObjectId(request.retailer_id);

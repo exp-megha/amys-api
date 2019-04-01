@@ -23,8 +23,12 @@ var MobileInvoiceSchema = mongoose.Schema({
         {
             item_id: { type: String, default: null, trim: true },
             item_name: { type: String, default: null },
+            item_type: { type: String, default: null },
             imei_number: { type: String, default: null },
             item_amount: { type: Number, default: null },
+            total_before_tax: { type: Number, default: 0, trim: true },
+            cgst_amount: { type: Number, default: 0, trim: true },
+            sgst_amount: { type: Number, default: 0, trim: true },
             quantity: { type: Number, default: null },
         }
     ]

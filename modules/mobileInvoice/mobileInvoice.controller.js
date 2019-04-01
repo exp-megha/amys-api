@@ -64,12 +64,12 @@ var addMobileInvoice = (req, res) => {
         "cgst_amount": req.body.cgst_amount,
         "sgst_amount": req.body.sgst_amount,
         "total_discount": total_discount,
-        "total_gst": total_gst,
+        "total_gst": req.body.total_gst,
         "invoice_date": req.body.invoice_date,
         "item_list": req.body.item_list
     };
     ApplicationSetting.findOne({
-            settings_name: "latest_amys_invoice_id"
+            settings_name: "latest_amys_mobile_invoice_id"
         })
         .then((invoice_data) => {
             if (!invoice_data) {
@@ -90,6 +90,7 @@ var addMobileInvoice = (req, res) => {
             invoice_object.year = Number(moment(parseInt(req.body.invoice_date)).format('YYYY'));
             MobileInvoice.create(invoice_object, (err, data) => {
                 if (err) {
+                    console.log(err)
                     return Promise.reject('failed-to-add-invoice');
                 }
                 return res.status(200).message('invoice-added-successfully').returnSuccess(data);
@@ -105,32 +106,35 @@ var addMobileInvoice = (req, res) => {
  * @updatedOn 29-June-2017 Sachin Kumar
  */
 let updateMobileInvoiceDetails = (req, res) => {
+    console.log('-------------------', req.body)
     MobileInvoice.findOne({
             '_id': req.params.id
         })
         .then((invoice) => {
             if (!invoice) {
+                console.log('00000000000000')
                 return Promise.reject('Invoice-not-found');
             }
+            console.log('111111111111111111')
             req.body.month = Number(moment(parseInt(req.body.invoice_date)).format('M'));
             req.body.year = Number(moment(parseInt(req.body.invoice_date)).format('YYYY'));
-            req.body.platform = req.user.platform;
+            // req.body.platform = req.user.platform;
 
-            let invoice_total = req.body.invoice_total;
-            let total_before_tax = (total_amount / 112) * 100;
-            let cgst_amount = actual_price * constants.GST_SPLIT_PERCENTAGE;
-            let sgst_amount = actual_price * constants.GST_SPLIT_PERCENTAGE;
-            let total_discount = req.body.total_discount;
-            let total_gst = cgst_amount + sgst_amount;
+            // let invoice_total = req.body.invoice_total;
+            // let total_before_tax = (invoice_total / 112) * 100;
+            // let cgst_amount = actual_price * constants.GST_SPLIT_PERCENTAGE;
+            // let sgst_amount = actual_price * constants.GST_SPLIT_PERCENTAGE;
+            // let total_discount = req.body.total_discount;
+            // let total_gst = cgst_amount + sgst_amount;
             let invoice_object = {
                 "customer_name": req.body.customer_name,
                 "customer_address": req.body.customer_address,
-                "invoice_total": invoice_total - total_discount,
-                "total_before_tax": total_before_tax,
+                "invoice_total": req.body.invoice_total - req.body.total_discount,
+                "total_before_tax": req.body.total_before_tax,
                 "cgst_amount": req.body.cgst_amount,
                 "sgst_amount": req.body.sgst_amount,
-                "total_discount": total_discount,
-                "total_gst": total_gst,
+                "total_discount": req.body.total_discount,
+                "total_gst": req.body.total_gst,
                 "invoice_date": req.body.invoice_date,
                 "item_list": req.body.item_list
             };
@@ -141,11 +145,13 @@ let updateMobileInvoiceDetails = (req, res) => {
             });
         })
         .then((result) => {
+            console.log('22222222222222', result)
             if (!result) {
                 return Promise.reject('failed-to-update-invoice-info');
             }
             return res.status(200).message('Invoice-information-updated').returnSuccess(result);
         }).catch((err) => {
+            console.log('3333333333333333',err)
             res.status(400).message(err).returnFailure(null);
         });
 }
@@ -169,8 +175,8 @@ let getMobileInvoices = (req, res) => {
     }
     let excel_export = (req.query.export_to_excel == 'true') ? true : false;
     let query = {};
-    var platform = (req.user) ? req.user.platform : req.query.platform;
-    console.log('=====', platform, req.user, sort_by_field)
+    var platform = 'web';
+    // console.log('=====', platform, req.user, sort_by_field)
     var sheet_name = platform + ' Invoice-';
     Promise.all([]).then(() => {
             return searchAndFilters.mobileInvoiceSearchQuery(req.query, platform);
@@ -192,6 +198,7 @@ let getMobileInvoices = (req, res) => {
             }
         })
         .then((result) => {
+            // console.log('=====', result)
             var items = result[0];
             // var retailer_count = result[1];
             if (!items) {
@@ -206,6 +213,7 @@ let getMobileInvoices = (req, res) => {
             }
         }).catch((e) => {
             var result = [];
+            console.log('**************',e)
             res.status(200).message(e).returnFailure(result);
         });
 };
@@ -428,10 +436,33 @@ let exportToExcel = (res, items, title, sheet_name) => {
     // res.end(report, 'binary');
 }
 
+const getItemTypes = async(req, res) => {
+    let item_types = [
+        {
+            "key": 'mobile',
+            "value": 'Mobile'
+        },
+        {
+            "key": 'mobileCover',
+            "value": 'Mobile Covers'
+        },
+        {
+            "key": 'memoryCard',
+            "value": 'Memory Cards'
+        },
+        {
+            "key": 'others',
+            "value": 'Others'
+        }
+    ];
+    return res.status(200).message('Item types returned successfully').returnSuccess(item_types);
+}
+
 module.exports = {
     addMobileInvoice,
     getMobileInvoices,
     updateMobileInvoiceDetails,
     getMobileInvoiceDetails,
-    cancelMobileInvoice
+    cancelMobileInvoice,
+    getItemTypes
 };
