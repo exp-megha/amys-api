@@ -5,7 +5,8 @@ const dependencies = [
     'item',
     'invoice',
     'users',
-    'mobileInvoice'
+    'mobileInvoice',
+    'mobile'
 ];
 
 module.exports = {

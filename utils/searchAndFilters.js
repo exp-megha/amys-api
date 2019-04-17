@@ -3,22 +3,63 @@ var constants = require('../constants');
 var ObjectId = require('mongodb').ObjectId;
 
 var retailerSearchQuery = (req, reqQuery, platform) => {
-    let filter_query = {"platform": platform};
+    let filter_query = {
+        "platform": platform
+    };
     // var filter_query = {};
     if (reqQuery.search_text) {
         var re = new RegExp(reqQuery.search_text, 'i');
         filter_query = {
-            $or: [
-                { "first_name": { $regex: re } },
-                { "last_name": { $regex: re } },
-                { "specialisation": { $regex: re } },
-                { "email": { $regex: re } },
-                { "company": { $regex: re } },
-                { "address": { $regex: re } },
-                { "city": { $regex: re } },
-                { "state": { $regex: re } },
-                { "country": { $regex: re } },
-                { "phone_number": { $regex: re } }
+            $or: [{
+                    "first_name": {
+                        $regex: re
+                    }
+                },
+                {
+                    "last_name": {
+                        $regex: re
+                    }
+                },
+                {
+                    "specialisation": {
+                        $regex: re
+                    }
+                },
+                {
+                    "email": {
+                        $regex: re
+                    }
+                },
+                {
+                    "company": {
+                        $regex: re
+                    }
+                },
+                {
+                    "address": {
+                        $regex: re
+                    }
+                },
+                {
+                    "city": {
+                        $regex: re
+                    }
+                },
+                {
+                    "state": {
+                        $regex: re
+                    }
+                },
+                {
+                    "country": {
+                        $regex: re
+                    }
+                },
+                {
+                    "phone_number": {
+                        $regex: re
+                    }
+                }
             ]
         };
     }
@@ -41,7 +82,9 @@ var retailerSearchQuery = (req, reqQuery, platform) => {
 }
 
 let itemSearchQuery = (request, platform) => {
-    let search_query = {"platform": platform};
+    let search_query = {
+        "platform": platform
+    };
     if (request.item_name) {
         search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i")
     }
@@ -65,7 +108,9 @@ let itemSearchQuery = (request, platform) => {
 }
 
 let invoiceSearchQuery = (request, platform) => {
-    let search_query = {"platform": platform};
+    let search_query = {
+        "platform": platform
+    };
     // let search_query = {};
     if (request.retailer_id) {
         search_query["retailer_id"] = ObjectId(request.retailer_id);
@@ -89,7 +134,13 @@ let invoiceSearchQuery = (request, platform) => {
         var is_active = (request.is_active == 'true') ? true : false;
         search_query['is_active'] = is_active;
     } else {
-        search_query['is_active'] = true;        
+        search_query['is_active'] = true;
+    }
+    if (request.startDate && request.endDate) {
+        search_query["invoice_date"] = {
+            "$gte": request.startDate,
+            "$lt": request.endDate
+        };
     }
     return search_query;
 }
@@ -115,7 +166,7 @@ let mobileInvoiceSearchQuery = (request, platform) => {
         search_query["customer_address"] = new RegExp('^.*' + request.customer_address + '.*$', "i");
     }
     if (request.item_name) {
-        search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i"); 
+        search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i");
     }
     if (request.invoice_date) {
         search_query["invoice_date"] = request.invoice_date;
@@ -124,11 +175,14 @@ let mobileInvoiceSearchQuery = (request, platform) => {
         var is_active = (request.is_active == 'true') ? true : false;
         search_query['is_active'] = is_active;
     } else {
-        search_query['is_active'] = true;        
+        search_query['is_active'] = true;
     }
     return search_query;
 }
 
 module.exports = {
-    retailerSearchQuery, itemSearchQuery, invoiceSearchQuery, mobileInvoiceSearchQuery
+    retailerSearchQuery,
+    itemSearchQuery,
+    invoiceSearchQuery,
+    mobileInvoiceSearchQuery
 }

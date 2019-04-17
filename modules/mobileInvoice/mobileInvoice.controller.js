@@ -3,6 +3,9 @@ var {
     MobileInvoice
 } = require('./../../models/mobileInvoice');
 var {
+    Mobile
+} = require('./../../models/mobile');
+var {
     Item
 } = require('./../../models/item');
 var {
@@ -34,10 +37,11 @@ function pad(n, width, z) {
  * @createdOn 30-June-2017
  */
 function getNewUniqueID(id, prefix) {
-    var serial_number = id.replace(prefix, '');
-    var final_serial_number = parseInt(serial_number, 10) + 1;
-    var final_id = prefix + final_serial_number; // + checksum;
-    return final_id;
+    // var serial_number = id.replace(prefix, '');
+    // var final_serial_number = parseInt(serial_number, 10) + 1;
+    var final_serial_number = parseInt(id, 10) + 1;
+    // var final_id = prefix + final_serial_number; // + checksum;
+    return final_serial_number;
 }
 
 /**
@@ -48,7 +52,14 @@ function getNewUniqueID(id, prefix) {
  */
 var addMobileInvoice = (req, res) => {
     var checksum = generator.checkSum(1);
-    var invoice_id = constants.INVOICE_ID_PREFIX + "1"; // + checksum;
+    let invoice_type = (req.body.invoice_type) ? req.body.invoice_type : 'b2c';
+    if (invoice_type == 'b2c') {
+        var invoice_id = constants.INVOICE_ID_PREFIX_B2C + "1"; 
+    } else {
+        var invoice_id = constants.INVOICE_ID_PREFIX_B2B + "1"; 
+    }
+    let serial_num = 0;
+    // var invoice_id = constants.INVOICE_ID_PREFIX + "1"; // + checksum;
 
     let invoice_total = req.body.invoice_total;
     let total_before_tax = (invoice_total / 112) * 100;
@@ -66,6 +77,7 @@ var addMobileInvoice = (req, res) => {
         "total_discount": total_discount,
         "total_gst": req.body.total_gst,
         "invoice_date": req.body.invoice_date,
+        "invoice_type": (req.body.invoice_type) ? req.body.invoice_type : 'b2c',
         "item_list": req.body.item_list
     };
     ApplicationSetting.findOne({
@@ -76,9 +88,16 @@ var addMobileInvoice = (req, res) => {
                 return Promise.reject('error-occured-try-again');
             }
             if (invoice_data.settings_value != undefined) {
-                invoice_id = getNewUniqueID(invoice_data.settings_value, constants.INVOICE_ID_PREFIX);
+                if (invoice_object.invoice_type == 'b2c') {
+                    serial_num = getNewUniqueID(invoice_data.settings_value, constants.INVOICE_ID_PREFIX_B2C);
+                    invoice_id = constants.INVOICE_ID_PREFIX_B2C + serial_num;
+                } else {
+                    serial_num = getNewUniqueID(invoice_data.settings_value, constants.INVOICE_ID_PREFIX_B2B);
+                    invoice_id = constants.INVOICE_ID_PREFIX_B2B + serial_num;
+                }
             }
-            invoice_data['settings_value'] = invoice_id;
+            invoice_data['settings_value'] = serial_num;
+            console.log(serial_num, '============', invoice_id)
             return invoice_data.save();
         })
         .then((invoice_info) => {
@@ -136,6 +155,7 @@ let updateMobileInvoiceDetails = (req, res) => {
                 "total_discount": req.body.total_discount,
                 "total_gst": req.body.total_gst,
                 "invoice_date": req.body.invoice_date,
+                // "invoice_type": req.body.invoice_type,
                 "item_list": req.body.item_list
             };
             return MobileInvoice.findByIdAndUpdate({
@@ -151,7 +171,7 @@ let updateMobileInvoiceDetails = (req, res) => {
             }
             return res.status(200).message('Invoice-information-updated').returnSuccess(result);
         }).catch((err) => {
-            console.log('3333333333333333',err)
+            console.log('3333333333333333', err)
             res.status(400).message(err).returnFailure(null);
         });
 }
@@ -213,7 +233,7 @@ let getMobileInvoices = (req, res) => {
             }
         }).catch((e) => {
             var result = [];
-            console.log('**************',e)
+            console.log('**************', e)
             res.status(200).message(e).returnFailure(result);
         });
 };
@@ -436,9 +456,8 @@ let exportToExcel = (res, items, title, sheet_name) => {
     // res.end(report, 'binary');
 }
 
-const getItemTypes = async(req, res) => {
-    let item_types = [
-        {
+const getItemTypes = async (req, res) => {
+    let item_types = [{
             "key": 'mobile',
             "value": 'Mobile'
         },
@@ -458,11 +477,36 @@ const getItemTypes = async(req, res) => {
     return res.status(200).message('Item types returned successfully').returnSuccess(item_types);
 }
 
+const getItemList = async (req, res) => {
+    Mobile.find({"is_active": true}) 
+    .then ((result) => {
+        // console.log(result)
+        return res.status(200).message('Item list returned successfully').returnSuccess(result);
+    }).catch((err) => {
+        res.status(400).message(err).returnFailure(null);
+    });    
+}
+
+var addItemList = (req, res) => {
+    
+    let item_list = req.body.item_list;
+    // console.log('=================',item_list);
+    Mobile.create(item_list, (err, data) => {
+        if (err) {
+            console.log(err)
+            return Promise.reject('failed-to-add-items');
+        }
+        return res.status(200).message('items-added-successfully').returnSuccess(data);
+    });
+}
+
 module.exports = {
     addMobileInvoice,
     getMobileInvoices,
     updateMobileInvoiceDetails,
     getMobileInvoiceDetails,
     cancelMobileInvoice,
-    getItemTypes
+    getItemTypes,
+    getItemList,
+    addItemList
 };

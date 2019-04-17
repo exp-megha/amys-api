@@ -20,4 +20,7 @@ module.exports.GST_REGISTRATION_NUMBER = "32BSWPS5772G1Z1";
 module.exports.EXCEL_TEMPLATE_PATH_WEB = this.BASE_URL;
 /* GST Split Perenatge */
 module.exports.GST_SPLIT_PERCENTAGE = 0.06;
+module.exports.INVOICE_ID_PREFIX_B2B = "INV-B2B-";
+module.exports.INVOICE_ID_PREFIX_B2C = "INV-B2C-";
+
 

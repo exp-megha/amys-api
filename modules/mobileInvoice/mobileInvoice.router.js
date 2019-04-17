@@ -10,9 +10,13 @@ const routes = (authenticate) => {
 	router.route("/itemTypes")
 		.get(controller.getItemTypes)
 
+	router.route("/itemList")
+		.get(controller.getItemList)
+		.post(controller.addItemList)
+
 	router.route("/")
 		.get(authenticate.authenticate, controller.getMobileInvoices)
-		.post(authenticate.authenticate, controller.addMobileInvoice);
+		.post(controller.addMobileInvoice);
 
 	router.route("/:id")
 		.put(authenticate.authenticate, controller.updateMobileInvoiceDetails)

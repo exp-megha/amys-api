@@ -8,6 +8,7 @@ var MobileInvoiceSchema = mongoose.Schema({
     platform: { type: String, trim: true },
     month: { type: Number, default: null, trim: true, required: true },
     year: { type: Number, default: true, trim: true },
+    invoice_type: { type: String, default: 'b2c', trim: true },
     invoice_number: { type: String, default: null, trim: true },
     invoice_date: { type: Number, default: null, trim: true },
     is_active: { type: Boolean, default: true },
