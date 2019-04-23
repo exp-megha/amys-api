@@ -80,8 +80,9 @@ var addMobileInvoice = (req, res) => {
         "invoice_type": (req.body.invoice_type) ? req.body.invoice_type : 'b2c',
         "item_list": req.body.item_list
     };
+    let settings_name_type = (invoice_object.invoice_type == 'b2c') ? 'latest_amys_mobile_b2c_invoice_id' : 'latest_amys_mobile_b2b_invoice_id';
     ApplicationSetting.findOne({
-            settings_name: "latest_amys_mobile_invoice_id"
+            settings_name: settings_name_type
         })
         .then((invoice_data) => {
             if (!invoice_data) {

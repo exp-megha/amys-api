@@ -22,5 +22,7 @@ module.exports.EXCEL_TEMPLATE_PATH_WEB = this.BASE_URL;
 module.exports.GST_SPLIT_PERCENTAGE = 0.06;
 module.exports.INVOICE_ID_PREFIX_B2B = "INV-B2B-";
 module.exports.INVOICE_ID_PREFIX_B2C = "INV-B2C-";
-
+module.exports.INVOICE_ID_PREFIX_IDEA = "INV-I-";
+module.exports.INVOICE_ID_PREFIX_SUNDIRECT = "INV-S-";
+module.exports.INVOICE_ID_PREFIX_AMYS = "INV-A-";
 

@@ -1,5 +1,6 @@
 const _ = require('lodash');
 var { Invoice } = require('./../../models/invoice');
+// var { InvoiceNew } = require('./../../models/invoiceNew');
 var { Item } = require('./../../models/item');
 var { Retailer } = require('./../../models/retailer');
 var { ApplicationSetting } = require('./../../models/applicationsetting');
@@ -25,11 +26,15 @@ function pad(n, width, z) {
  * @return json
  * @createdOn 30-June-2017
  */
+// function getNewUniqueID(id, prefix) {
+//     var serial_number = id.replace(prefix, '');
+//     var final_serial_number = parseInt(serial_number, 10) + 1;
+//     var final_id = prefix + final_serial_number; // + checksum;
+//     return final_id;
+// }
 function getNewUniqueID(id, prefix) {
-    var serial_number = id.replace(prefix, '');
-    var final_serial_number = parseInt(serial_number, 10) + 1;
-    var final_id = prefix + final_serial_number; // + checksum;
-    return final_id;
+    var final_serial_number = parseInt(id, 10) + 1;
+    return final_serial_number;
 }
 
 /**
@@ -54,6 +59,15 @@ var addInvoice = (req, res) => {
     }
     var checksum = generator.checkSum(1);
     var invoice_id = constants.INVOICE_ID_PREFIX + "1"; // + checksum;
+    let invoice_id_prefix = constants.INVOICE_ID_PREFIX_AMYS; //     INV-A-
+    if (req.user.platform == 'Idea') {
+        invoice_id_prefix = constants.INVOICE_ID_PREFIX_IDEA; //    INV-I-
+    } else if (req.user.platform == 'SunDirect') {
+        invoice_id_prefix = constants.INVOICE_ID_PREFIX_SUNDIRECT; //   INV-S-
+    } else {
+        invoice_id_prefix = constants.INVOICE_ID_PREFIX_AMYS; //     INV-A-
+    }
+    let serial_num = 0;
     Retailer.findOne({ _id: req.body.retailer_id })
         .then((retaler_data) => {
             if (!retaler_data) {
@@ -79,10 +93,13 @@ var addInvoice = (req, res) => {
             if (!invoice_data) {
                 return Promise.reject('error-occured-try-again');
             }
+            
             if (invoice_data.settings_value != undefined) {
-                invoice_id = getNewUniqueID(invoice_data.settings_value, constants.INVOICE_ID_PREFIX);
+                serial_num = getNewUniqueID(invoice_data.settings_value, invoice_id_prefix);
+                invoice_id = invoice_id_prefix + serial_num;
             }
-            invoice_data['settings_value'] = invoice_id;
+            // invoice_data['settings_value'] = invoice_id;
+            invoice_data['settings_value'] = serial_num;
             return invoice_data.save();
         })
         .then((invoice_info) => {
