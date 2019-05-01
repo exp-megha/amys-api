@@ -54,9 +54,9 @@ var addMobileInvoice = (req, res) => {
     var checksum = generator.checkSum(1);
     let invoice_type = (req.body.invoice_type) ? req.body.invoice_type : 'b2c';
     if (invoice_type == 'b2c') {
-        var invoice_id = constants.INVOICE_ID_PREFIX_B2C + "1"; 
+        var invoice_id = constants.INVOICE_ID_PREFIX_B2C + "1";
     } else {
-        var invoice_id = constants.INVOICE_ID_PREFIX_B2B + "1"; 
+        var invoice_id = constants.INVOICE_ID_PREFIX_B2B + "1";
     }
     let serial_num = 0;
     // var invoice_id = constants.INVOICE_ID_PREFIX + "1"; // + checksum;
@@ -189,7 +189,7 @@ let getMobileInvoices = (req, res) => {
     let limit = req.query.limit || constants.PAGE_LIMIT;
     let page = (req.query.page) ? parseInt(req.query.page) : 1;
     let skip = page > 0 ? ((page - 1) * limit) : 0;
-    var sort_by_field = (req.query.sort_by_field) ? req.query.sort_by_field : "createdAt";
+    var sort_by_field = (req.query.sort_by_field) ? req.query.sort_by_field : "invoice_date";
     var sort_order = (req.query.sort_order) ? req.query.sort_order : "desc";
     if (sort_order == 'desc') {
         sort_by_field = '-' + sort_by_field;
@@ -210,7 +210,7 @@ let getMobileInvoices = (req, res) => {
             req.query.total_count = count;
             if (excel_export == true) {
                 return Promise.all([
-                    MobileInvoice.find(query).sort("createdAt")
+                    MobileInvoice.find(query).sort(sort_by_field)
                 ]);
             } else {
                 return Promise.all([
@@ -479,17 +479,19 @@ const getItemTypes = async (req, res) => {
 }
 
 const getItemList = async (req, res) => {
-    Mobile.find({"is_active": true}) 
-    .then ((result) => {
-        // console.log(result)
-        return res.status(200).message('Item list returned successfully').returnSuccess(result);
-    }).catch((err) => {
-        res.status(400).message(err).returnFailure(null);
-    });    
+    Mobile.find({
+            "is_active": true
+        })
+        .then((result) => {
+            // console.log(result)
+            return res.status(200).message('Item list returned successfully').returnSuccess(result);
+        }).catch((err) => {
+            res.status(400).message(err).returnFailure(null);
+        });
 }
 
 var addItemList = (req, res) => {
-    
+
     let item_list = req.body.item_list;
     // console.log('=================',item_list);
     Mobile.create(item_list, (err, data) => {

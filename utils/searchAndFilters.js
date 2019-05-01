@@ -1,6 +1,7 @@
 var moment = require('moment');
 var constants = require('../constants');
 var ObjectId = require('mongodb').ObjectId;
+const _ = require('lodash');
 
 var retailerSearchQuery = (req, reqQuery, platform) => {
     let filter_query = {
@@ -145,39 +146,68 @@ let invoiceSearchQuery = (request, platform) => {
     return search_query;
 }
 let mobileInvoiceSearchQuery = (request, platform) => {
+    let conditions = [];
     let search_query = {};
+    let filter_query = {};
+    let final_query = {};
     // let search_query = {};
     if (request.retailer_id) {
-        search_query["retailer_id"] = ObjectId(request.retailer_id);
+        conditions.push({"retailer_id": ObjectId(request.retailer_id)});
+        // search_query["retailer_id"] = ObjectId(request.retailer_id);
     }
     if (request.month) {
-        search_query["month"] = Number(request.month);
+        // search_query["month"] = Number(request.month);
+        conditions.push({"month": Number(request.month)});
     }
     if (request.year) {
-        search_query["year"] = Number(request.year);
+        // search_query["year"] = Number(request.year);
+        conditions.push({"year": Number(request.year)});
     }
     if (request.invoice_number) {
-        search_query["invoice_number"] = new RegExp('^.*' + request.invoice_number + '.*$', "i");
+        // search_query["invoice_number"] = new RegExp('^.*' + request.invoice_number + '.*$', "i");
+        conditions.push({"invoice_number":new RegExp('^.*' + request.invoice_number + '.*$', "i")});
     }
-    if (request.customer_name) {
-        search_query["customer_name"] = new RegExp('^.*' + request.customer_name + '.*$', "i");
+    if (request.keyword) {
+        // var re = new RegExp(reqQuery.search_text, 'i');
+        var re = new RegExp('^.*' + request.keyword + '.*$', "i");
+        conditions.push({
+            $or: [
+                { "customer_name": { $regex: re } },
+                { "customer_address": { $regex: re } },
+                {"item_list.item_name": { $regex: re }}
+            ]
+        });        
     }
-    if (request.customer_address) {
-        search_query["customer_address"] = new RegExp('^.*' + request.customer_address + '.*$', "i");
+    
+    if (request.invoice_type) {
+        // search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i");
+        conditions.push({"invoice_type": new RegExp('^.*' + request.invoice_type + '.*$', "i")});
     }
     if (request.item_name) {
-        search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i");
+        // search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i");
+        conditions.push({"item_list.item_name": new RegExp('^.*' + request.item_name + '.*$', "i")});
+    }
+    if (request.mobile_id) {
+        // search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i");
+        conditions.push({"item_list.mobile_id": ObjectId(request.mobile_id )});
     }
     if (request.invoice_date) {
-        search_query["invoice_date"] = request.invoice_date;
+        // search_query["invoice_date"] = request.invoice_date;
+        conditions.push({"invoice_date": request.invoice_date});
     }
     if (request.is_active) {
         var is_active = (request.is_active == 'true') ? true : false;
-        search_query['is_active'] = is_active;
+        conditions.push({"is_active": is_active});
     } else {
         search_query['is_active'] = true;
     }
-    return search_query;
+    if (conditions.length > 0) {
+        filter_query = {
+            $and: conditions
+        };
+    }   
+
+    return filter_query;
 }
 
 module.exports = {
