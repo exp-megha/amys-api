@@ -39,7 +39,7 @@ function pad(n, width, z) {
 function getNewUniqueID(id, prefix) {
     // var serial_number = id.replace(prefix, '');
     // var final_serial_number = parseInt(serial_number, 10) + 1;
-    var final_serial_number = parseInt(id, 10) + 1;
+    var final_serial_number = parseInt(id) + 1;
     // var final_id = prefix + final_serial_number; // + checksum;
     return final_serial_number;
 }
@@ -404,7 +404,7 @@ let exportToExcel = (res, items, title, sheet_name) => {
             inv_date: moment(parseInt(items[i].invoice_date)).format("DD MMM, YYYY"),
             customer_name: items[i].customer_name,
             customer_address: items[i].customer_address,
-            total_before_tax: parseFloat(items[i].total_before_tax),
+            total_before_tax: parseFloat(items[i].total_before_tax.toFixed(2)),
             gst_total: parseFloat(items[i].total_gst),
             discount: parseFloat(items[i].total_discount),
             inv_total: parseFloat(items[i].invoice_total)
@@ -412,7 +412,7 @@ let exportToExcel = (res, items, title, sheet_name) => {
         total_amount = total_amount + parseFloat(items[i].invoice_total);
         dataset.push(a);
     }
-    console.log('**********************', dataset)
+    // console.log('**********************', dataset)
     dataset.push({}, {
         inv_number: '',
         inv_date: '',

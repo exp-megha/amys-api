@@ -191,6 +191,9 @@ let mobileInvoiceSearchQuery = (request, platform) => {
         // search_query["item_name"] = new RegExp('^.*' + request.item_name + '.*$', "i");
         conditions.push({"item_list.mobile_id": ObjectId(request.mobile_id )});
     }
+    if (request.item_type) { // mobile, cards, other etc
+        conditions.push({"item_list.item_type": request.item_type });
+    }
     if (request.invoice_date) {
         // search_query["invoice_date"] = request.invoice_date;
         conditions.push({"invoice_date": request.invoice_date});
