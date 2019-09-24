@@ -20,6 +20,8 @@ var MobileInvoiceSchema = mongoose.Schema({
     total_discount: { type: Number, default: 0, trim: true },
     total_gst: { type: Number, default: 0, trim: true },
     invoice_total: { type: Number, default: 0, trim: true },
+    cess_amount: { type: Number, default: 0 },
+    cess_percentage: { type: Number, default: 0 },
     item_list: [
         {
             item_id: { type: String, default: null, trim: true },
@@ -31,7 +33,7 @@ var MobileInvoiceSchema = mongoose.Schema({
             total_before_tax: { type: Number, default: 0, trim: true },
             cgst_amount: { type: Number, default: 0, trim: true },  
             sgst_amount: { type: Number, default: 0, trim: true },
-            quantity: { type: Number, default: null },
+            quantity: { type: Number, default: 0 }
         }
     ]
 },

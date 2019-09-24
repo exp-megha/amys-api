@@ -15,7 +15,7 @@ const routes = (authenticate) => {
 		.post(controller.addItemList)
 
 	router.route("/")
-		.get(authenticate.authenticate, controller.getMobileInvoices)
+		.get( controller.getMobileInvoices)
 		.post(controller.addMobileInvoice);
 
 	router.route("/:id")

@@ -78,7 +78,9 @@ var addMobileInvoice = (req, res) => {
         "total_gst": req.body.total_gst,
         "invoice_date": req.body.invoice_date,
         "invoice_type": (req.body.invoice_type) ? req.body.invoice_type : 'b2c',
-        "item_list": req.body.item_list
+        "item_list": req.body.item_list,
+        "cess_amount": req.body.cess_amount || 0,
+        "cess_percentage": req.body.cess_percentage || 0
     };
     let settings_name_type = (invoice_object.invoice_type == 'b2c') ? 'latest_amys_mobile_b2c_invoice_id' : 'latest_amys_mobile_b2b_invoice_id';
     ApplicationSetting.findOne({
@@ -98,7 +100,7 @@ var addMobileInvoice = (req, res) => {
                 }
             }
             invoice_data['settings_value'] = serial_num;
-            console.log(serial_num, '============', invoice_id)
+            // console.log(serial_num, '============', invoice_id)
             return invoice_data.save();
         })
         .then((invoice_info) => {
@@ -157,7 +159,9 @@ let updateMobileInvoiceDetails = (req, res) => {
                 "total_gst": req.body.total_gst,
                 "invoice_date": req.body.invoice_date,
                 // "invoice_type": req.body.invoice_type,
-                "item_list": req.body.item_list
+                "item_list": req.body.item_list,
+                "cess_amount": req.body.cess_amount || 0,
+                "cess_percentage": req.body.cess_percentage || 0
             };
             return MobileInvoice.findByIdAndUpdate({
                 _id: req.params.id
@@ -385,6 +389,11 @@ let exportToExcel = (res, items, title, sheet_name) => {
             headerStyle: styles.cellPink,
             width: 80 // <- width in pixels  
         },
+        cess_amount: {
+            displayName: 'Cess',
+            headerStyle: styles.cellPink,
+            width: 80 // <- width in pixels  
+        },
         discount: {
             displayName: 'Discount',
             headerStyle: styles.cellPink,
@@ -406,6 +415,7 @@ let exportToExcel = (res, items, title, sheet_name) => {
             customer_address: items[i].customer_address,
             total_before_tax: parseFloat(items[i].total_before_tax.toFixed(2)),
             gst_total: parseFloat(items[i].total_gst),
+            cess_amount: parseFloat(items[i].cess_amount),
             discount: parseFloat(items[i].total_discount),
             inv_total: parseFloat(items[i].invoice_total)
         }
@@ -420,6 +430,7 @@ let exportToExcel = (res, items, title, sheet_name) => {
         customer_address: '',
         total_before_tax: '',
         gst_total: '',
+        cess_amount: '',
         discount: '',
         inv_total: total_amount,
         style: styles.headerDark

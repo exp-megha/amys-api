@@ -33,7 +33,7 @@ function pad(n, width, z) {
 //     return final_id;
 // }
 function getNewUniqueID(id, prefix) {
-    var final_serial_number = parseInt(id, 10) + 1;
+    var final_serial_number = parseInt(id) + 1;
     return final_serial_number;
 }
 
