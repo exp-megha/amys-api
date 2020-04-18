@@ -62,7 +62,9 @@ var addMobileInvoice = (req, res) => {
     // var invoice_id = constants.INVOICE_ID_PREFIX + "1"; // + checksum;
 
     let invoice_total = req.body.invoice_total;
-    let total_before_tax = (invoice_total / 112) * 100;
+    let cess_amount = req.body.cess_amount || 0;
+    let total_before_tax = ((invoice_total - cess_amount) / 112) * 100;
+    // let total_before_tax =  req.body.total_before_tax;
     let cgst_amount = total_before_tax * constants.GST_SPLIT_PERCENTAGE;
     let sgst_amount = total_before_tax * constants.GST_SPLIT_PERCENTAGE;
     let total_discount = req.body.total_discount;
@@ -70,7 +72,7 @@ var addMobileInvoice = (req, res) => {
     let invoice_object = {
         "customer_name": req.body.customer_name,
         "customer_address": req.body.customer_address,
-        "invoice_total": invoice_total - total_discount,
+        "invoice_total": invoice_total,
         "total_before_tax": total_before_tax,
         "cgst_amount": req.body.cgst_amount,
         "sgst_amount": req.body.sgst_amount,
@@ -84,8 +86,8 @@ var addMobileInvoice = (req, res) => {
     };
     let settings_name_type = (invoice_object.invoice_type == 'b2c') ? 'latest_amys_mobile_b2c_invoice_id' : 'latest_amys_mobile_b2b_invoice_id';
     ApplicationSetting.findOne({
-            settings_name: settings_name_type
-        })
+        settings_name: settings_name_type
+    })
         .then((invoice_data) => {
             if (!invoice_data) {
                 return Promise.reject('error-occured-try-again');
@@ -130,8 +132,8 @@ var addMobileInvoice = (req, res) => {
 let updateMobileInvoiceDetails = (req, res) => {
     console.log('-------------------', req.body)
     MobileInvoice.findOne({
-            '_id': req.params.id
-        })
+        '_id': req.params.id
+    })
         .then((invoice) => {
             if (!invoice) {
                 console.log('00000000000000')
@@ -151,7 +153,7 @@ let updateMobileInvoiceDetails = (req, res) => {
             let invoice_object = {
                 "customer_name": req.body.customer_name,
                 "customer_address": req.body.customer_address,
-                "invoice_total": req.body.invoice_total - req.body.total_discount,
+                "invoice_total": req.body.invoice_total,
                 "total_before_tax": req.body.total_before_tax,
                 "cgst_amount": req.body.cgst_amount,
                 "sgst_amount": req.body.sgst_amount,
@@ -204,8 +206,8 @@ let getMobileInvoices = (req, res) => {
     // console.log('=====', platform, req.user, sort_by_field)
     var sheet_name = platform + ' Invoice-';
     Promise.all([]).then(() => {
-            return searchAndFilters.mobileInvoiceSearchQuery(req.query, platform);
-        })
+        return searchAndFilters.mobileInvoiceSearchQuery(req.query, platform);
+    })
         .then((search_query) => {
             query = search_query;
             return MobileInvoice.count(query);
@@ -250,12 +252,17 @@ let getMobileInvoiceDetails = (req, res) => {
     }
     var invoice_data = {};
     MobileInvoice.findOne({
-            '_id': req.params.id
-        }).lean()
+        '_id': req.params.id
+    }).lean()
         .then((invoice) => {
             if (!invoice) {
                 return Promise.reject('invoice-not-found');
             }
+            invoice.cess_amount = (invoice.cess_amount) ? invoice.cess_amount : 0;
+            invoice.cess_percentage = (invoice.cess_percentage) ? invoice.cess_percentage : 0;
+
+            invoice.total_before_tax = ((invoice.invoice_total - invoice.cess_amount) / 112) * 100;
+
             return res.status(200).message('invoice-information-retrieved-successfully').returnSuccess(invoice);
         }).catch((err) => {
             res.status(400).message(err).returnFailure(null);
@@ -264,8 +271,8 @@ let getMobileInvoiceDetails = (req, res) => {
 
 let cancelMobileInvoice = (req, res) => {
     MobileInvoice.findOne({
-            '_id': req.params.id
-        })
+        '_id': req.params.id
+    })
         .then((invoice) => {
             if (!invoice) {
                 return Promise.reject('Item-not-found');
@@ -408,12 +415,13 @@ let exportToExcel = (res, items, title, sheet_name) => {
     var total_amount = 0;
     var dataset = [];
     for (i = 0; i < items.length; i++) {
+        let total_before_tax = ((items[i].invoice_total - items[i].cess_amount) / 112) * 100;
         a = {
             inv_number: items[i].invoice_number,
             inv_date: moment(parseInt(items[i].invoice_date)).format("DD MMM, YYYY"),
             customer_name: items[i].customer_name,
             customer_address: items[i].customer_address,
-            total_before_tax: parseFloat(items[i].total_before_tax.toFixed(2)),
+            total_before_tax: parseFloat(total_before_tax.toFixed(2)),
             gst_total: parseFloat(items[i].total_gst),
             cess_amount: parseFloat(items[i].cess_amount),
             discount: parseFloat(items[i].total_discount),
@@ -436,15 +444,15 @@ let exportToExcel = (res, items, title, sheet_name) => {
         style: styles.headerDark
     });
     const merges = [{
-            start: {
-                row: 1,
-                column: 1
-            },
-            end: {
-                row: 1,
-                column: 9
-            }
+        start: {
+            row: 1,
+            column: 1
         },
+        end: {
+            row: 1,
+            column: 9
+        }
+    },
         // { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
         // { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
     ]
@@ -470,29 +478,29 @@ let exportToExcel = (res, items, title, sheet_name) => {
 
 const getItemTypes = async (req, res) => {
     let item_types = [{
-            "key": 'mobile',
-            "value": 'Mobile'
-        },
-        {
-            "key": 'mobileCover',
-            "value": 'Mobile Covers'
-        },
-        {
-            "key": 'memoryCard',
-            "value": 'Memory Cards'
-        },
-        {
-            "key": 'others',
-            "value": 'Others'
-        }
+        "key": 'mobile',
+        "value": 'Mobile'
+    },
+    {
+        "key": 'mobileCover',
+        "value": 'Mobile Covers'
+    },
+    {
+        "key": 'memoryCard',
+        "value": 'Memory Cards'
+    },
+    {
+        "key": 'others',
+        "value": 'Others'
+    }
     ];
     return res.status(200).message('Item types returned successfully').returnSuccess(item_types);
 }
 
 const getItemList = async (req, res) => {
     Mobile.find({
-            "is_active": true
-        })
+        "is_active": true
+    })
         .then((result) => {
             // console.log(result)
             return res.status(200).message('Item list returned successfully').returnSuccess(result);

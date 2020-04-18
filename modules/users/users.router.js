@@ -8,7 +8,7 @@ const routes = (authenticate) => {
 		.post(authenticate.nonAuthenticate, controller.login);
 
 	router.route("/applicationSettings")
-		.get(authenticate.authenticate, controller.applicationSettings);
+		.get(authenticate.nonAuthenticate, controller.applicationSettings);
 
 
 

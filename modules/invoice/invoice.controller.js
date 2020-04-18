@@ -93,7 +93,7 @@ var addInvoice = (req, res) => {
             if (!invoice_data) {
                 return Promise.reject('error-occured-try-again');
             }
-            
+
             if (invoice_data.settings_value != undefined) {
                 serial_num = getNewUniqueID(invoice_data.settings_value, invoice_id_prefix);
                 invoice_id = invoice_id_prefix + serial_num;
@@ -369,6 +369,11 @@ let exportToExcel = (res, items, title, sheet_name) => {
             headerStyle: styles.cellPink,
             width: 80 // <- width in pixels  
         },
+        cess_amount: {
+            displayName: 'Cess',
+            headerStyle: styles.cellPink,
+            width: 80 // <- width in pixels  
+        },
         discount: {
             displayName: 'Discount',
             headerStyle: styles.cellPink,
@@ -383,6 +388,8 @@ let exportToExcel = (res, items, title, sheet_name) => {
     var total_amount = 0;
     var dataset = [];
     for (i = 0; i < items.length; i++) {
+        let cess_amount = parseFloat(items[i].total_before_tax) * (1 / 100);
+        let total = (items[i].invoice_total + cess_amount) - items[i].total_discount;
         a = {
             inv_number: items[i].invoice_number,
             inv_date: moment(parseInt(items[i].invoice_date)).format("DD MMM, YYYY"),
@@ -390,16 +397,17 @@ let exportToExcel = (res, items, title, sheet_name) => {
             gst_no: items[i].retailer_gst_registration_number,
             pan_no: items[i].retailer_pan_number,
             total_before_tax: parseFloat(items[i].total_before_tax),
+            cess_amount: parseFloat(cess_amount).toFixed(2),
             gst_total: parseFloat(items[i].total_gst),
             discount: parseFloat(items[i].total_discount),
-            inv_total: parseFloat(items[i].invoice_total)
+            inv_total: parseFloat(total).toFixed(2)
         }
-        total_amount = total_amount + parseFloat(items[i].invoice_total);
+        total_amount = total_amount + parseFloat(total);
         dataset.push(a);
     }
-    console.log('**********************', dataset)
+    // console.log('**********************', dataset)
     dataset.push({}, {
-        inv_number: '', inv_date: '', retailer: '', gst_no: '', pan_no: '', total_before_tax: '', gst_total: '', discount: '',
+        inv_number: '', inv_date: '', retailer: '', gst_no: '', pan_no: '', total_before_tax: '', gst_total: '', cess_amount: '', discount: '',
         inv_total: total_amount, style: styles.headerDark
     });
     const merges = [
