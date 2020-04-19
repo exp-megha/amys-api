@@ -46,7 +46,7 @@ let login = (req, res) => {
         }).catch((e) => res.status(401).message(e).returnFailure(null));
 }
 
-let getGstMobile = (req, res) => {
+let getSettings = (req, res) => {
     let settings_array = [];
     // let select_fields = { _id: 1, name: 1, text: 1, id: 1 };
     // let search_query =  { $or: [ { settings_name: 'cgst_percentage_mobile' }, {settings_name: 'sgst_percentage_mobile'} ] };
@@ -68,5 +68,5 @@ let getGstMobile = (req, res) => {
 }
 
 module.exports = {
-    applicationSettings, login, getGstMobile
+    applicationSettings, login, getSettings
 };

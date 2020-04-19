@@ -10,8 +10,8 @@ const routes = (authenticate) => {
 	router.route("/applicationSettings")
 		.get(authenticate.nonAuthenticate, controller.applicationSettings);
 
-	router.route("/gstMobile")
-		.get(authenticate.nonAuthenticate, controller.getGstMobile);
+	router.route("/settings")
+		.get(authenticate.nonAuthenticate, controller.getSettings);
 
 	return router;
 }
