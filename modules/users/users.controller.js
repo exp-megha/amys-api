@@ -46,6 +46,27 @@ let login = (req, res) => {
         }).catch((e) => res.status(401).message(e).returnFailure(null));
 }
 
+let getGstMobile = (req, res) => {
+    let settings_array = [];
+    // let select_fields = { _id: 1, name: 1, text: 1, id: 1 };
+    // let search_query =  { $or: [ { settings_name: 'cgst_percentage_mobile' }, {settings_name: 'sgst_percentage_mobile'} ] };
+    let output = {};
+    ApplicationSetting.find()
+        .then((settings) => {
+            if (!settings) {
+                return Promise.reject('no-records-found');
+            }
+            async.eachSeries(settings, function (data, callback) {
+                output[data.settings_name] = data.settings_value;
+                callback();
+            }, function () {
+                return res.status(200).message('Application-settings-retrieved-successfully').returnSuccess(output);
+            });
+        }).catch((err) => {
+            res.status(400).message(err).returnFailure(null);
+        });
+}
+
 module.exports = {
-    applicationSettings, login
+    applicationSettings, login, getGstMobile
 };
