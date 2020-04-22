@@ -67,6 +67,10 @@ var addMobileInvoice = (req, res) => {
     // let total_before_tax =  req.body.total_before_tax;
     let cgst_amount = total_before_tax * constants.GST_SPLIT_PERCENTAGE;
     let sgst_amount = total_before_tax * constants.GST_SPLIT_PERCENTAGE;
+
+    let sgst_percentage_mobile = req.body.sgst_percentage_mobile;
+    let cgst_percentage_mobile = req.body.cgst_percentage_mobile;
+
     let total_discount = req.body.total_discount;
     let total_gst = cgst_amount + sgst_amount;
     let invoice_object = {
@@ -82,7 +86,9 @@ var addMobileInvoice = (req, res) => {
         "invoice_type": (req.body.invoice_type) ? req.body.invoice_type : 'b2c',
         "item_list": req.body.item_list,
         "cess_amount": req.body.cess_amount || 0,
-        "cess_percentage": req.body.cess_percentage || 0
+        "cess_percentage": req.body.cess_percentage || 0,
+        "sgst_percentage_mobile": req.body.sgst_percentage_mobile,
+        "cgst_percentage_mobile": req.body.cgst_percentage_mobile
     };
     let settings_name_type = (invoice_object.invoice_type == 'b2c') ? 'latest_amys_mobile_b2c_invoice_id' : 'latest_amys_mobile_b2b_invoice_id';
     ApplicationSetting.findOne({
@@ -163,7 +169,9 @@ let updateMobileInvoiceDetails = (req, res) => {
                 // "invoice_type": req.body.invoice_type,
                 "item_list": req.body.item_list,
                 "cess_amount": req.body.cess_amount || 0,
-                "cess_percentage": req.body.cess_percentage || 0
+                "cess_percentage": req.body.cess_percentage || 0,
+                "sgst_percentage_mobile": req.body.sgst_percentage_mobile,
+                "cgst_percentage_mobile": req.body.cgst_percentage_mobile
             };
             return MobileInvoice.findByIdAndUpdate({
                 _id: req.params.id
