@@ -76,8 +76,8 @@ var addMobileInvoice = (req, res) => {
     let invoice_object = {
         "customer_name": req.body.customer_name,
         "customer_address": req.body.customer_address,
-        "invoice_total": invoice_total,
-        "total_before_tax": total_before_tax,
+        "invoice_total":  req.body.invoice_total,
+        "total_before_tax": req.body.total_before_tax,
         "cgst_amount": req.body.cgst_amount,
         "sgst_amount": req.body.sgst_amount,
         "total_discount": total_discount,
@@ -269,7 +269,8 @@ let getMobileInvoiceDetails = (req, res) => {
             invoice.cess_amount = (invoice.cess_amount) ? invoice.cess_amount : 0;
             invoice.cess_percentage = (invoice.cess_percentage) ? invoice.cess_percentage : 0;
 
-            invoice.total_before_tax = ((invoice.invoice_total - invoice.cess_amount) / 112) * 100;
+            // invoice.total_before_tax = ((invoice.invoice_total - invoice.cess_amount) / 112) * 100;
+            invoice.total_before_tax = invoice.invoice_total - (invoice.cess_amount + invoice.total_gst);
 
             return res.status(200).message('invoice-information-retrieved-successfully').returnSuccess(invoice);
         }).catch((err) => {
@@ -423,7 +424,8 @@ let exportToExcel = (res, items, title, sheet_name) => {
     var total_amount = 0;
     var dataset = [];
     for (i = 0; i < items.length; i++) {
-        let total_before_tax = ((items[i].invoice_total - items[i].cess_amount) / 112) * 100;
+        // let total_before_tax = ((items[i].invoice_total - items[i].cess_amount) / 112) * 100;
+        let total_before_tax = items[i].invoice_total - (items[i].cess_amount + items[i].total_gst);
         a = {
             inv_number: items[i].invoice_number,
             inv_date: moment(parseInt(items[i].invoice_date)).format("DD MMM, YYYY"),
