@@ -33,7 +33,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.9",
     "mongodb": "^3.6.3",
-    "mongoose": "^4.10.3",
+    "mongoose": "^5.7.5",
     "natives": "^1.1.6",
     "node-excel-export": "^1.4.2",
     "nodemon": "^1.11.0",
