@@ -61,7 +61,7 @@ UserSchema.statics.findByCredentials = function (login_details) {
         if (!user) {
             return Promise.reject('invalid-email');
         } else {
-            // console.log(user)
+            console.log(user)
             return user;
             // return new Promise((resolve, reject) => {
             //     bcrypt.compare(login_details.password, user.password).then((result) => {

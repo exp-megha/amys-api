@@ -6,7 +6,7 @@ var cors = (req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
 
     if (req.method === 'OPTIONS') {
-        return res.send(200);
+        return res.sendStatus(200);
     } else {
         return next();
     }

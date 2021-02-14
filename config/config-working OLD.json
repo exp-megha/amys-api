@@ -1,7 +1,7 @@
 {
     "development" : {
         "PORT": 4000,
-        "MONGODB_URI": "mongodb+srv://amys_user:amys@amys-billing.jjgqw.mongodb.net/amys_billing?retryWrites=true&w=majority",
+        "MONGODB_URI": "mongodb://gurudas:may192005@ds135983.mlab.com:35983/amys_billing",
         "JWT_SECRET": "asd6v65v6754c654ce54c6464c767",
         "LANGUAGE": "en"
     }

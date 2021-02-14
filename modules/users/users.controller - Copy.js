@@ -14,7 +14,6 @@ var async = require('async');
  */
 let applicationSettings = (req, res) => {
     let settings_array = [];
-    console.log('in applicationSettings')
     ApplicationSetting.find({})
         .then((settings) => {
             if (!settings) {
@@ -35,16 +34,26 @@ let applicationSettings = (req, res) => {
 }
 
 let login = (req, res) => {
+    console.log('******IN LOGIN');
+    try {
+
     User.findByCredentials(req.body)
         .then((user) => {
+            console.log('******Before SUCCESS', user);
+
             user.generateAuthToken().then((token) => {
                 if (token) {
+                    console.log('******IN LOGIN SUCCESS');
                     return res.status(200).message('login-successful').returnSuccess(user);
                 } else {
                     return Promise.reject('login-failed');
                 }
             })
         }).catch((e) => res.status(401).message(e).returnFailure(null));
+    } catch (e) {
+        console.log('IN ERRRRRRR')
+        console.error(e);
+    };
 }
 
 let getSettings = (req, res) => {
