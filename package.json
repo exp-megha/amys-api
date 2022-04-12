@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "apidoc": "^0.17.6",
-    "async": "^2.0.0-rc.3",
+    "async": "^3.2.2",
     "bcryptjs": "^2.4.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
