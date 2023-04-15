@@ -359,21 +359,26 @@ let exportToExcel = (res, items, title, sheet_name) => {
             headerStyle: styles.cellPink,
             width: 120 // <- width in pixels  
         },
+        hsn_code: {
+            displayName: 'HSN Code',
+            headerStyle: styles.cellPink,
+            width: 80
+        },
+        total_quantity: {
+            displayName: 'Total Quantity',
+            headerStyle: styles.cellPink,
+            width: 80
+        },
         total_before_tax: {
             displayName: 'Total Before Tax',
             headerStyle: styles.cellPink,
-            width: 120 // <- width in pixels  
+            width: 80 // <- width in pixels  
         },
         gst_total: {
             displayName: 'Total GST',
             headerStyle: styles.cellPink,
             width: 80 // <- width in pixels  
         },
-        // cess_amount: {
-        //     displayName: 'Cess',
-        //     headerStyle: styles.cellPink,
-        //     width: 80 // <- width in pixels  
-        // },
         discount: {
             displayName: 'Discount',
             headerStyle: styles.cellPink,
@@ -383,12 +388,46 @@ let exportToExcel = (res, items, title, sheet_name) => {
             displayName: 'Invoice Total',
             headerStyle: styles.cellPink,
             width: 120 // <- width in pixels  Retailer PAN Card
-        }
+        }        
     }
     var total_amount = 0;
     var dataset = [];
     for (i = 0; i < items.length; i++) {
         let cess_amount = parseFloat(items[i].total_before_tax) * (1 / 100);
+        var total_quantity = 0;
+        if(items[i].item_list[0]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[0].quantity); 
+        };
+        if(items[i].item_list[1]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[1].quantity); 
+        };
+        if(items[i].item_list[2]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[2].quantity); 
+        };
+        if(items[i].item_list[3]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[3].quantity); 
+        };
+        if(items[i].item_list[4]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[4].quantity); 
+        };
+        if(items[i].item_list[5]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[5].quantity); 
+        };
+        if(items[i].item_list[6]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[6].quantity); 
+        };
+        if(items[i].item_list[7]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[7].quantity); 
+        };
+        if(items[i].item_list[8]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[8].quantity); 
+        };
+        if(items[i].item_list[9]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[9].quantity); 
+        };
+        if(items[i].item_list[10]) { 
+            total_quantity = total_quantity + parseFloat(items[i].item_list[10].quantity); 
+        };
         // let total = (items[i].invoice_total + cess_amount) - items[i].total_discount;
         let total = (items[i].invoice_total) - items[i].total_discount;
         a = {
@@ -401,7 +440,9 @@ let exportToExcel = (res, items, title, sheet_name) => {
             // cess_amount: parseFloat(cess_amount).toFixed(2),
             gst_total: parseFloat(items[i].total_gst),
             discount: parseFloat(items[i].total_discount),
-            inv_total: parseFloat(total).toFixed(2)
+            inv_total: parseFloat(total).toFixed(2),
+            hsn_code: items[i].item_list[0].hsn_sac_code,
+            total_quantity: total_quantity
         }
         total_amount = total_amount + parseFloat(total);
         dataset.push(a);
@@ -409,11 +450,11 @@ let exportToExcel = (res, items, title, sheet_name) => {
     // console.log('**********************', dataset)
         // inv_number: '', inv_date: '', retailer: '', gst_no: '', pan_no: '', total_before_tax: '', gst_total: '', cess_amount: '', discount: '',
         dataset.push({}, {
-        inv_number: '', inv_date: '', retailer: '', gst_no: '', pan_no: '', total_before_tax: '', gst_total: '', discount: '',
+        inv_number: '', inv_date: '', retailer: '', gst_no: '', pan_no: '', hsn_code: '', total_quantity: '', total_before_tax: '', gst_total: '', discount: '',
         inv_total: total_amount, style: styles.headerDark
     });
     const merges = [
-        { start: { row: 1, column: 1 }, end: { row: 1, column: 9 } },
+        { start: { row: 1, column: 1 }, end: { row: 1, column: 11 } },
         // { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
         // { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
     ]
